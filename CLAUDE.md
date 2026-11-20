@@ -44,3 +44,5 @@ Dati per Google (Event), sitemap, llms.txt, calendario .ics e anteprime per What
 - Notifiche OneSignal: `onesignal_app_id` in `contenuti/sito.yml` + segreto GitHub `ONESIGNAL_REST_API_KEY`. Funzionano solo sul sito definitivo (NOINDEX vuoto).
 - Il job `notifica` del workflow invia la notifica (`notifica.py`) solo per i file evento **aggiunti** nel push con data futura; `notifica: false` nell'evento la evita. Quando aggiungi un evento a mano, usa un commit che crea un file nuovo.
 - Mai chiedere la chiave REST in chat: la inserisce l'utente nei segreti di GitHub.
+- Notifiche manuali/programmate: collezione Pages CMS "Notifiche" → `contenuti/notifiche/*.yml`; il job `notifiche-pannello` esegue `notifiche_pannello.py` (invio subito o `send_after` su OneSignal, annulla le programmate modificate/eliminate) e riscrive nel file `invia: false`, `stato`, `onesignal_id`.
+- Icone dell'app: `assets/icon-*.png` e `apple-touch-icon.png` con il logo AREA30 completo; `favicon.ico` resta il "30" (leggibile in piccolo).

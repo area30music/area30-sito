@@ -205,6 +205,9 @@
   const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const isSafari = /Safari/.test(ua) && !/Chrome|Chromium|CriOS|FxiOS|EdgiOS|Edg\//.test(ua);
   const macSafari = isSafari && !isIOS && /Macintosh/.test(ua);
+  const isAndroid = /Android/.test(ua);
+  const inApp = /FBAN|FBAV|FB_IAB|Instagram|Line\/|WhatsApp|Snapchat|TikTok|musical_ly|; wv\)/.test(ua);
+  const sistema = inApp ? "inapp" : isIOS ? "ios" : isAndroid ? "android" : macSafari ? "mac" : "desktop";
   const dialog = $("#install-dialog");
   let deferred = null;
   const band = () => $$("[data-install-band]").forEach((b) => {
@@ -240,7 +243,8 @@
     });
   }
   if (!standalone) {
-    if ((isIOS && isSafari) || macSafari) showInstall(true);
+    // il pulsante è sempre visibile: dove il browser lo permette installa con un tocco, altrimenti spiega come fare
+    showInstall(true);
     window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e; showInstall(true); });
     window.addEventListener("appinstalled", () => { deferred = null; showInstall(false); });
     document.addEventListener("click", async (e) => {
@@ -251,7 +255,7 @@
         if (r && r.outcome === "accepted") showInstall(false);
         deferred = null;
       } else if (dialog && dialog.showModal) {
-        dialog.dataset.os = isIOS ? "ios" : "mac";
+        dialog.dataset.os = sistema;
         setMenu(false);
         dialog.showModal();
       }

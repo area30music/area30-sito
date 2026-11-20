@@ -491,6 +491,12 @@ def build():
                              + (f", {e.luogo}" if e.luogo else "") + f", {e.citta}")
         e.foto_img = [i for i in (imgs.get(f, "photo", alt=f"Foto della serata {e.titolo}") for f in e.foto) if i]
         e.og = imgs.og(e.locandina, e.slug, poster=True, titolo=e.titolo) if e.locandina else ""
+    # immagini delle notifiche scritte nel pannello (servono online per OneSignal)
+    for nf in sorted((CONTENT / "notifiche").glob("*.yml")) if (CONTENT / "notifiche").exists() else []:
+        nd = load_yaml(nf)
+        if nd.get("immagine"):
+            imgs.og(str(nd["immagine"]), "notifica-" + nf.stem, poster=True,
+                    titolo=str(nd.get("titolo") or "AREA30").strip())
     prossimi = sorted([e for e in eventi if not e.passato], key=lambda e: e.inizio)
     passati = sorted([e for e in eventi if e.passato], key=lambda e: e.inizio, reverse=True)
 
@@ -505,7 +511,7 @@ def build():
     stampa.sort(key=lambda a: str(a.get("data", "")), reverse=True)
 
     hero = imgs.get(site.get("foto_apertura", "/media/live-01.jpg"), "photo",
-                    "Concerto dal vivo con luci viola e pubblico a mani alzate")
+                    "Palco illuminato e pubblico a un concerto organizzato da AREA30")
     video = site.get("video_apertura") or ""
     if video:
         vsrc = imgs._source(video)
@@ -532,7 +538,7 @@ def build():
                       trim_blocks=True, lstrip_blocks=True)
     env.globals.update(
         url=url, abs_url=abs_url, base_path=BASE_PATH, site=site, today=today, year=today.year, css=css, noindex=NOINDEX,
-        js_v=asset_version(ASSETS / "js" / "main.js"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
+        js_v=asset_version(ASSETS / "js" / "main.js"), icon_v=asset_version(ASSETS / "icon-512.png"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
         wa=lambda testo="": f"https://wa.me/{site['whatsapp']}" + (f"?text={quote(testo)}" if testo else ""),
     )
 
@@ -623,20 +629,20 @@ def build():
         "lang": "it", "dir": "ltr", "start_url": url("/?app=1"), "scope": url("/"),
         "display": "standalone", "display_override": ["standalone", "minimal-ui"], "orientation": "any",
         "background_color": "#09090b", "theme_color": "#09090b", "categories": ["music", "entertainment", "events"],
-        "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192", "type": "image/png", "purpose": "any"},
-                  {"src": url("/assets/icon-512.png"), "sizes": "512x512", "type": "image/png", "purpose": "any"},
-                  {"src": url("/assets/icon-maskable-512.png"), "sizes": "512x512", "type": "image/png", "purpose": "maskable"}],
+        "icons": [{"src": url("/assets/icon-192.png") + "?v=" + env.globals["icon_v"], "sizes": "192x192", "type": "image/png", "purpose": "any"},
+                  {"src": url("/assets/icon-512.png") + "?v=" + env.globals["icon_v"], "sizes": "512x512", "type": "image/png", "purpose": "any"},
+                  {"src": url("/assets/icon-maskable-512.png") + "?v=" + env.globals["icon_v"], "sizes": "512x512", "type": "image/png", "purpose": "maskable"}],
         "shortcuts": [
-            {"name": "Prossimi eventi", "url": url("/#eventi"), "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192"}]},
-            {"name": "Eventi passati", "url": url("/eventi-passati"), "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192"}]},
-            {"name": "Contatti", "url": url("/contattaci"), "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192"}]}]},
+            {"name": "Prossimi eventi", "url": url("/#eventi"), "icons": [{"src": url("/assets/icon-192.png") + "?v=" + env.globals["icon_v"], "sizes": "192x192"}]},
+            {"name": "Eventi passati", "url": url("/eventi-passati"), "icons": [{"src": url("/assets/icon-192.png") + "?v=" + env.globals["icon_v"], "sizes": "192x192"}]},
+            {"name": "Contatti", "url": url("/contattaci"), "icons": [{"src": url("/assets/icon-192.png") + "?v=" + env.globals["icon_v"], "sizes": "192x192"}]}]},
         ensure_ascii=False), encoding="utf-8")
 
     # Web app: pagina offline + service worker (la versione cambia a ogni pubblicazione)
     render("offline.html", "/offline", "offline.html", title="Sei offline | AREA30",
            description="Nessuna connessione a Internet.", no_sitemap=True, noindex_page=True)
     precache = [url("/"), url("/offline.html"), url("/assets/js/main.js") + "?v=" + env.globals["js_v"],
-                url("/assets/logo-area30.png"), url("/assets/icon-192.png"),
+                url("/assets/logo-area30.png"), url("/assets/icon-192.png") + "?v=" + env.globals["icon_v"],
                 url("/assets/fonts/big-shoulders.woff2"), url("/assets/fonts/manrope.woff2")]
     ver = hashlib.sha1("".join(sorted(p.name + str(p.stat().st_size) for p in OUT.rglob("*.html"))).encode()
                        + datetime.now(TZ).date().isoformat().encode()).hexdigest()[:10]

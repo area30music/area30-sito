@@ -110,6 +110,72 @@ content:
         type: text
         description: Programma, ospiti, informazioni aggiuntive.
 
+  - name: notifiche
+    label: Notifiche
+    type: collection
+    path: contenuti/notifiche
+    format: yaml
+    exclude: [LEGGIMI.md]
+    filename:
+      template: "{year}-{month}-{day}-{titolo}.yml"
+      field: false
+    view:
+      primary: titolo
+      fields: [titolo, stato, quando]
+      sort: [quando, titolo]
+      default:
+        sort: quando
+        order: desc
+    fields:
+      - name: titolo
+        label: Titolo della notifica
+        type: string
+        required: true
+        options: { maxlength: 60 }
+        description: "Breve, ad esempio: Ultimi biglietti per ABSOLUTE 5!"
+      - name: messaggio
+        label: Messaggio
+        type: text
+        required: true
+        options: { maxlength: 180 }
+        description: "Una o due frasi, ad esempio: Sabato alle 21 al Teatro Bongioanni. Prendi il tuo posto adesso."
+      - name: link
+        label: Pagina da aprire quando si tocca la notifica
+        type: string
+        description: "Incolla il link della pagina dell'evento (es. https://area30.it/eventi/...). Vuoto = Home."
+        pattern: { regex: "^$|^https://.+|^/.*", message: "Incolla un link che inizia con https://" }
+      - name: immagine
+        label: Immagine grande (facoltativa)
+        type: image
+        description: Ad esempio la locandina. Su alcuni telefoni compare sotto il testo.
+      - name: quando
+        label: Quando inviarla
+        type: date
+        default: ""
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm"
+        description: Lascia vuoto per inviarla subito. Se scegli giorno e ora, parte da sola in quel momento.
+      - name: invia
+        label: Pronta da inviare
+        type: boolean
+        default: true
+        description: "Quando salvi con questo interruttore acceso, la notifica parte (o viene programmata). Dopo l'invio si spegne da solo: per reinviarla riaccendilo e salva di nuovo."
+      - name: stato
+        label: Stato
+        type: string
+        readonly: true
+        description: Scritto in automatico dopo l'invio.
+      - name: onesignal_id
+        label: Codice OneSignal
+        type: string
+        readonly: true
+        hidden: true
+      - name: quando_programmato
+        type: string
+        readonly: true
+        hidden: true
+
   - name: galleria
     label: Galleria foto "Dal vivo"
     type: file

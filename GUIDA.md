@@ -104,3 +104,20 @@ Nome, indirizzo e telefono devono essere **identici** su sito, scheda Google e s
 
 Da quel momento, ogni volta che crei un **nuovo evento futuro** dal pannello (con l'interruttore "Invia una notifica" acceso), chi ha attivato le notifiche riceve dopo pochi minuti l'avviso con la locandina.
 Su iPhone e iPad le notifiche arrivano solo a chi ha installato l'app sulla schermata Home (iOS 16.4 o successivo).
+
+### Inviare notifiche quando vuoi (anche programmate)
+Nel pannello, sezione **Notifiche** → **Add an entry**:
+1. **Titolo** (es. "Ultimi biglietti per ABSOLUTE 5!") e **Messaggio** (una o due frasi).
+2. **Pagina da aprire**: incolla il link dell'evento (es. `https://area30.it/eventi/...`). Vuoto = Home.
+3. **Immagine** (facoltativa): ad esempio la locandina.
+4. **Quando inviarla**: vuoto = subito; oppure scegli giorno e ora e partirà da sola in quel momento.
+5. Lascia acceso **Pronta da inviare** e premi **Save**.
+
+Dopo un paio di minuti, nel campo **Stato** leggi "Inviata il …" oppure "Programmata per il …".
+
+- **Reinviare** la stessa notifica: aprila, riaccendi **Pronta da inviare** (puoi cambiare testo, giorno e ora) e salva.
+- **Cambiare** una notifica programmata: modificala, riaccendi **Pronta da inviare** e salva: quella vecchia viene annullata e sostituita.
+- **Annullare** una notifica programmata: eliminala dal pannello (menu ⋯ → Delete) prima dell'orario.
+- Più promemoria per lo stesso concerto (es. una settimana prima, il giorno prima, la mattina stessa): crea una notifica per ciascuno.
+
+In alternativa puoi usare direttamente il sito di OneSignal: **Messages → New Push**, con la possibilità di programmare l'invio e di duplicare un messaggio già inviato.

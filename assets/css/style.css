@@ -120,11 +120,14 @@ a:hover .link-arrow .ico,.link-arrow:hover .ico{transform:translateX(5px)}
 .hero-video.playing{opacity:1}
 .hero-img{animation:heroZoom 18s var(--ease) both}
 @keyframes heroZoom{from{transform:scale(1.14)}to{transform:scale(1.02)}}
-.hero-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(9,9,11,.55) 0%,rgba(9,9,11,.15) 30%,rgba(9,9,11,.6) 65%,var(--bg) 100%),radial-gradient(120% 80% at 50% 110%,rgba(9,9,11,.9),transparent 60%)}
+.hero-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(9,9,11,.6) 0%,rgba(9,9,11,.25) 30%,rgba(9,9,11,.7) 62%,var(--bg) 100%),radial-gradient(120% 80% at 50% 110%,rgba(9,9,11,.9),transparent 60%)}
 @media (max-width:700px){.hero-shade{background:linear-gradient(180deg,rgba(9,9,11,.5) 0%,rgba(9,9,11,.35) 25%,rgba(9,9,11,.72) 55%,var(--bg) 100%)}}
 .haze{position:absolute;inset:auto -10% -5% -10%;height:45%;z-index:1;pointer-events:none;background:radial-gradient(50% 60% at 30% 100%,rgba(255,255,255,.07),transparent 70%),radial-gradient(40% 50% at 75% 100%,rgba(227,189,99,.08),transparent 70%);animation:haze 14s ease-in-out infinite alternate}
 @keyframes haze{to{transform:translateX(4%)}}
 .hero-content{position:relative;z-index:2}
+.hero-content::before{content:"";position:absolute;z-index:-1;left:-10%;right:-10%;top:-12%;bottom:-8%;background:radial-gradient(60% 55% at 35% 50%,rgba(5,5,7,.55),transparent 75%);pointer-events:none}
+@media (max-width:700px){.hero-img{object-position:6% 40%}}
+@media (min-width:701px){.hero-shade::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,7,9,.78) 0%,rgba(7,7,9,.55) 38%,rgba(7,7,9,.15) 70%,transparent 100%)}}
 .hero-title{margin:0 0 1.2rem}
 .hero-logo{width:min(92vw,max(760px,46vw));height:auto;filter:drop-shadow(0 6px 30px rgba(227,189,99,.35));animation:logoIn 1.6s var(--ease) .15s both}
 @keyframes logoIn{from{opacity:0;transform:translateY(24px);filter:blur(10px) drop-shadow(0 0 0 transparent)}to{opacity:1}}
@@ -414,7 +417,8 @@ a:hover .link-arrow .ico,.link-arrow:hover .ico{transform:translateX(5px)}
 .install-close{top:12px;right:12px;width:40px;height:40px}
 .install-steps{margin:0;padding-left:1.2em;display:none;gap:12px;color:#d6d4cd}
 .install-steps .ico{display:inline-block;vertical-align:-.2em;color:var(--gold)}
-.install-dialog[data-os="ios"] .install-steps[data-os="ios"],.install-dialog[data-os="mac"] .install-steps[data-os="mac"]{display:grid}
+.install-dialog[data-os="ios"] .install-steps[data-os="ios"],.install-dialog[data-os="mac"] .install-steps[data-os="mac"],.install-dialog[data-os="android"] .install-steps[data-os="android"],.install-dialog[data-os="inapp"] .install-steps[data-os="inapp"],.install-dialog[data-os="desktop"] .install-steps[data-os="desktop"]{display:grid}
+
 
 /* Rivelazione allo scorrimento */
 .js .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--d,0ms)}

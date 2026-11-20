@@ -27,8 +27,8 @@
 <meta name="twitter:description" content="{{ description }}">
 <meta name="twitter:image" content="{{ og_image }}">
 <link rel="icon" href="{{ url('/favicon.ico') }}" sizes="48x48">
-<link rel="icon" href="{{ url('/assets/icon-192.png') }}" type="image/png" sizes="192x192">
-<link rel="apple-touch-icon" href="{{ url('/assets/apple-touch-icon.png') }}">
+<link rel="icon" href="{{ url('/assets/icon-192.png') }}?v={{ icon_v }}" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="{{ url('/assets/apple-touch-icon.png') }}?v={{ icon_v }}">
 <link rel="manifest" href="{{ url('/site.webmanifest') }}">
 <link rel="preload" href="{{ url('/assets/fonts/big-shoulders.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ url('/assets/fonts/manrope.woff2') }}" as="font" type="font/woff2" crossorigin>
@@ -146,14 +146,28 @@
   <img src="{{ url('/assets/icon-192.png') }}" alt="" width="72" height="72" class="install-icon">
   <h2 id="install-h">Installa l'app AREA30</h2>
   <ol class="install-steps" data-os="ios">
-    <li>Tocca il pulsante <b>Condividi</b> {{ icon("share") }} di Safari.</li>
-    <li>Scorri e scegli <b>Aggiungi alla schermata Home</b> {{ icon("plus") }}.</li>
-    <li>Tocca <b>Aggiungi</b>: trovi AREA30 tra le tue app.</li>
+    <li>Tocca <b>⋯</b> oppure il pulsante <b>Condividi</b> {{ icon("share") }} nella barra del browser.</li>
+    <li>Scegli <b>Aggiungi alla schermata Home</b> {{ icon("plus") }} (se non lo vedi, scorri l'elenco verso il basso).</li>
+    <li>Tocca <b>Aggiungi</b>: l'icona AREA30 compare tra le tue app.</li>
+  </ol>
+  <ol class="install-steps" data-os="android">
+    <li>Tocca il menu <b>⋮</b> in alto a destra del browser.</li>
+    <li>Scegli <b>Installa app</b> oppure <b>Aggiungi a schermata Home</b>.</li>
+    <li>Conferma: l'icona AREA30 compare tra le tue app.</li>
   </ol>
   <ol class="install-steps" data-os="mac">
     <li>In Safari apri il menu <b>File</b> (oppure il pulsante <b>Condividi</b> {{ icon("share") }}).</li>
     <li>Scegli <b>Aggiungi al Dock</b>.</li>
     <li>Premi <b>Aggiungi</b>: AREA30 compare nel Dock e in Launchpad.</li>
+  </ol>
+  <ol class="install-steps" data-os="inapp">
+    <li>Sei dentro un'altra app (Instagram, Facebook, WhatsApp…) che non permette di installare.</li>
+    <li>Tocca <b>⋯</b> in alto e scegli <b>Apri nel browser</b> (Safari o Chrome).</li>
+    <li>Poi premi di nuovo <b>Installa l'app</b>.</li>
+  </ol>
+  <ol class="install-steps" data-os="desktop">
+    <li>Apri area30.it con <b>Chrome</b>, <b>Edge</b> o <b>Safari</b>.</li>
+    <li>Premi <b>Installa l'app</b>, oppure l'icona di installazione {{ icon("download") }} nella barra degli indirizzi.</li>
   </ol>
 </dialog>
 

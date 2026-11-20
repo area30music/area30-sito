@@ -99,3 +99,58 @@ jobs:
           NOINDEX: ${{ vars.NOINDEX }}
           ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
         run: python notifica.py ${{ steps.nuovi.outputs.files }}
+
+  notifiche-pannello:
+    # Notifiche scritte nel pannello (sezione "Notifiche"): invio subito o programmato, poi aggiorna lo stato
+    needs: deploy
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cerca notifiche salvate o eliminate
+        id: file
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then echo "salvati=" >> "$GITHUB_OUTPUT"; echo "eliminati=" >> "$GITHUB_OUTPUT"; exit 0; fi
+          S=$(git diff --name-only --diff-filter=AM "$BEFORE" "${{ github.sha }}" -- 'contenuti/notifiche/*.yml' | tr '\n' ' ')
+          E=$(git diff --name-only --diff-filter=D "$BEFORE" "${{ github.sha }}" -- 'contenuti/notifiche/*.yml' | tr '\n' ' ')
+          echo "Salvate: $S / Eliminate: $E"
+          echo "salvati=$S" >> "$GITHUB_OUTPUT"
+          echo "eliminati=$E" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.file.outputs.salvati != '' || steps.file.outputs.eliminati != ''
+        with:
+          python-version: "3.12"
+          cache: pip
+      - if: steps.file.outputs.salvati != '' || steps.file.outputs.eliminati != ''
+        run: pip install -r requirements.txt
+      - uses: actions/cache@v4
+        if: steps.file.outputs.salvati != '' || steps.file.outputs.eliminati != ''
+        with:
+          path: .cache/img
+          key: img-${{ hashFiles('media/**') }}
+          restore-keys: img-
+      - name: Invia o programma
+        if: steps.file.outputs.salvati != '' || steps.file.outputs.eliminati != ''
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          BASE_PATH: ${{ vars.BASE_PATH }}
+          NOINDEX: ${{ vars.NOINDEX }}
+          ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
+          BEFORE_SHA: ${{ github.event.before }}
+          ELENCO_MODIFICATI: modificati.txt
+        run: python notifiche_pannello.py --salvati ${{ steps.file.outputs.salvati }} --eliminati ${{ steps.file.outputs.eliminati }}
+      - name: Aggiorna lo stato nel pannello
+        if: steps.file.outputs.salvati != ''
+        run: |
+          if [ -s modificati.txt ]; then
+            git config user.name "AREA30 notifiche"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add $(cat modificati.txt)
+            git commit -m "Stato notifiche aggiornato" || exit 0
+            git pull --rebase --autostash origin main && git push origin HEAD:main
+          fi
