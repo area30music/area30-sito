@@ -647,6 +647,9 @@ def build():
         sw = re.sub(r"/\* PUSH-PROPRIO-INIZIO[\s\S]*?PUSH-PROPRIO-FINE \*/", "", sw)
         sw = 'importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");\n' + sw
     (OUT / "sw.js").write_text(sw, encoding="utf-8")
+    if onesignal_id:
+        # stesso service worker anche con il nome predefinito di OneSignal: qualunque percorso usi, il comportamento è identico
+        (OUT / "OneSignalSDKWorker.js").write_text(sw, encoding="utf-8")
     shutil.copy2(ASSETS / "favicon.ico", OUT / "favicon.ico")
     (OUT / ".nojekyll").write_text("")
     if (ROOT / "CNAME").exists() and not BASE_PATH:
