@@ -40,7 +40,7 @@ OUT = ROOT / "_site"
 CACHE = ROOT / ".cache" / "img"
 
 TZ = ZoneInfo("Europe/Rome")
-SITE_URL = os.environ.get("SITE_URL", "https://area30.it").rstrip("/")
+SITE_URL = (os.environ.get("SITE_URL") or "https://area30.it").rstrip("/")
 BASE_PATH = os.environ.get("BASE_PATH", "").rstrip("/")
 NOINDEX = os.environ.get("NOINDEX", "") == "1"  # anteprima: non farla indicizzare
 
