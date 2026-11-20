@@ -220,6 +220,22 @@
 
   /* Notifiche dei nuovi eventi (OneSignal) */
   const notifyBtns = $$("[data-notify]");
+  const bell = $("[data-notify-bell]");
+  const sheet = $("#notify-sheet");
+  const CHIAVE = "area30-notifiche-non-ora";
+  const rimandato = () => { try { return Date.now() - (+localStorage.getItem(CHIAVE) || 0) < 7 * 864e5; } catch (_) { return false; } };
+  const apriSheet = (modo) => {
+    if (!sheet || rimandato() || document.body.classList.contains("menu-open")) return;
+    sheet.dataset.mode = modo; sheet.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => sheet.classList.add("open")));
+  };
+  const chiudiSheet = (rimanda) => {
+    if (!sheet || sheet.hidden) return;
+    sheet.classList.remove("open");
+    setTimeout(() => { sheet.hidden = true; }, 450);
+    if (rimanda) { try { localStorage.setItem(CHIAVE, String(Date.now())); } catch (_) { /* niente */ } }
+  };
+  $$("[data-notify-no]").forEach((b) => b.addEventListener("click", () => chiudiSheet(true)));
   const setNotify = (stato) => {
     notifyBtns.forEach((b) => {
       b.hidden = stato === "nascosto";
@@ -227,20 +243,32 @@
       const l = $("[data-notify-label]", b);
       if (l) l.textContent = stato === "attivo" ? "Notifiche attive ✓" : (b.closest(".app-band") ? "Avvisami dei nuovi concerti" : "Attiva le notifiche");
     });
+    if (bell) bell.hidden = stato !== "spento";
     band();
   };
-  if (window.OneSignalDeferred && "Notification" in window && (!isIOS || standalone)) {
+  const pushOk = window.OneSignalDeferred && "Notification" in window;
+  if (pushOk && (!isIOS || standalone)) {
     window.OneSignalDeferred.push((OneSignal) => {
       const aggiorna = () => setNotify(OneSignal.User.PushSubscription.optedIn ? "attivo" : (Notification.permission === "denied" ? "nascosto" : "spento"));
+      const richiedi = async () => {
+        if (!OneSignal.User.PushSubscription.optedIn) {
+          if (Notification.permission === "granted") await OneSignal.User.PushSubscription.optIn();
+          else await OneSignal.Notifications.requestPermission();
+        }
+        aggiorna(); chiudiSheet(false);
+      };
       aggiorna();
       OneSignal.User.PushSubscription.addEventListener("change", aggiorna);
-      notifyBtns.forEach((b) => b.addEventListener("click", async () => {
-        if (OneSignal.User.PushSubscription.optedIn) return;
-        if (Notification.permission === "granted") await OneSignal.User.PushSubscription.optIn();
-        else await OneSignal.Notifications.requestPermission();
-        aggiorna();
-      }));
+      [...notifyBtns, ...$$("[data-notify-yes]"), bell].filter(Boolean).forEach((b) => b.addEventListener("click", richiedi));
+      // chiede di attivarle da solo: subito nell'app installata, dopo qualche secondo nel browser
+      if (!OneSignal.User.PushSubscription.optedIn && Notification.permission !== "denied") {
+        setTimeout(() => { if (!OneSignal.User.PushSubscription.optedIn) apriSheet("attiva"); }, standalone ? 1200 : 8000);
+      }
     });
+  } else if (pushOk && isIOS && !standalone) {
+    // iPhone/iPad nel browser: per le notifiche serve l'app installata
+    if (bell) { bell.hidden = false; bell.addEventListener("click", () => { try { localStorage.removeItem(CHIAVE); } catch (_) { /* niente */ } apriSheet("ios"); }); }
+    setTimeout(() => apriSheet("ios"), 10000);
   }
   if (!standalone) {
     // il pulsante è sempre visibile: dove il browser lo permette installa con un tocco, altrimenti spiega come fare
@@ -249,6 +277,7 @@
     window.addEventListener("appinstalled", () => { deferred = null; showInstall(false); });
     document.addEventListener("click", async (e) => {
       if (!e.target.closest("[data-install]")) return;
+      chiudiSheet(false);
       if (deferred) {
         deferred.prompt();
         const r = await deferred.userChoice.catch(() => null);

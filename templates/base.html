@@ -88,6 +88,7 @@
         </div>
       </div>
     </nav>
+    {% if onesignal_id %}<button class="bell" type="button" data-notify-bell hidden aria-label="Attiva le notifiche dei nuovi concerti">{{ icon("bell") }}<span class="bell-dot" aria-hidden="true"></span></button>{% endif %}
     <button class="menu-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Apri il menu"><span></span><span></span></button>
   </div>
 </header>
@@ -140,6 +141,23 @@
 </footer>
 
 <a class="wa-float" href="{{ wa('Ciao AREA30, vorrei informazioni') }}" target="_blank" rel="noopener" aria-label="Scrivici su WhatsApp">{{ icon("whatsapp") }}</a>
+
+{% if onesignal_id %}
+<div class="notify-sheet" id="notify-sheet" role="dialog" aria-modal="false" aria-labelledby="notify-h" hidden>
+  <button type="button" class="notify-x" data-notify-no aria-label="Chiudi">{{ icon("close") }}</button>
+  <div class="notify-ico">{{ icon("bell") }}</div>
+  <div class="notify-txt">
+    <h2 id="notify-h">Non perderti i prossimi concerti</h2>
+    <p data-mode="attiva">Attiva le notifiche: ti avvisiamo quando annunciamo un nuovo evento AREA30.</p>
+    <p data-mode="ios">Su iPhone e iPad le notifiche arrivano solo con l’app installata sulla schermata Home.</p>
+  </div>
+  <div class="notify-actions">
+    <button type="button" class="btn btn-gold" data-mode="attiva" data-notify-yes>{{ icon("bell") }}<span>Attiva le notifiche</span></button>
+    <button type="button" class="btn btn-gold" data-mode="ios" data-install>{{ icon("download") }}<span>Installa l’app</span></button>
+    <button type="button" class="btn btn-ghost" data-notify-no>Non ora</button>
+  </div>
+</div>
+{% endif %}
 
 <dialog class="install-dialog" id="install-dialog" aria-labelledby="install-h">
   <form method="dialog"><button class="lb-btn install-close" aria-label="Chiudi">{{ icon("close") }}</button></form>
