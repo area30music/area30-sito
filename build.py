@@ -656,7 +656,9 @@ def build():
     if onesignal_id:
         # OneSignal gestisce ricezione e clic delle notifiche dentro lo stesso service worker
         sw = re.sub(r"/\* PUSH-PROPRIO-INIZIO[\s\S]*?PUSH-PROPRIO-FINE \*/", "", sw)
-        sw = 'importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");\n' + sw
+        # se OneSignal è bloccato (blocchi pubblicità, reti filtrate) l'app deve funzionare lo stesso
+        sw = ('try { importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js"); }'
+              ' catch (e) { /* OneSignal non raggiungibile: app e offline funzionano comunque */ }\n') + sw
     (OUT / "sw.js").write_text(sw, encoding="utf-8")
     if onesignal_id:
         # stesso service worker anche con il nome predefinito di OneSignal: qualunque percorso usi, il comportamento è identico

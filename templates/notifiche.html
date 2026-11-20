@@ -101,6 +101,13 @@
       righe.push(["Iscrizione push del telefono", sub ? "presente (" + new URL(sub.endpoint).host + ")" : "assente"]);
     } catch (e) { righe.push(["Service worker", "errore: " + e.message]); }
     if (os) { try { righe.push(["ID OneSignal", String(os.User.PushSubscription.id || "nessuno")]); } catch (_) {} }
+    async function prova(url) {
+      try { await fetch(url, { mode: "no-cors", cache: "no-store" }); return "raggiungibile"; }
+      catch (e) { return "BLOCCATO"; }
+    }
+    righe.push(["Rete → cdn.onesignal.com", await prova("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js?t=" + Date.now())]);
+    righe.push(["Rete → api.onesignal.com", await prova("https://api.onesignal.com/?t=" + Date.now())]);
+    righe.push(["Rete → onesignal.com", await prova("https://onesignal.com/favicon.ico?t=" + Date.now())]);
     var m = navigator.userAgent.match(/OS (\d+[_\d]*)/);
     righe.push(["Sistema", m ? "iOS " + m[1].replace(/_/g, ".") : navigator.platform]);
     righe.push(["Errori", (window.__osErroriJs || []).slice(-3).join(" ; ") || "nessuno"]);
