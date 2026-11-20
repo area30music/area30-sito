@@ -127,7 +127,8 @@ def main(argv: list[str]) -> int:
         body = {
             "app_id": app_id, "target_channel": "push", "included_segments": ["Total Subscriptions"],
             "headings": {"en": titolo, "it": titolo}, "contents": {"en": testo, "it": testo},
-            "url": link_assoluto(d.get("link", "")),
+            "url": build.link_notifica(p.stem, titolo, testo, link_assoluto(d.get("link", "")) if d.get("link") else "",
+                                       imgs.og(str(d["immagine"]), "notifica-" + p.stem, poster=True, titolo=titolo) if d.get("immagine") else ""),
             "chrome_web_icon": build.abs_url("/assets/icon-192.png"),
         }
         if d.get("immagine"):
@@ -150,6 +151,8 @@ def main(argv: list[str]) -> int:
                 d.pop("quando_programmato", None)
                 d["stato"] = f"Inviata il {adesso.strftime(FMT_IT)}"
             print("  " + d["stato"])
+        if d.get("onesignal_id") and not str(d.get("stato", "")).startswith("Errore"):
+            d["inviata_il"] = adesso.strftime("%Y-%m-%dT%H:%M")
         d["invia"] = False  # per reinviarla: riattiva "Pronta da inviare" e salva
         p.write_text(yaml.safe_dump(d, allow_unicode=True, sort_keys=False), encoding="utf-8")
         modificati.append(path)

@@ -6,6 +6,8 @@ on:
   schedule:
     # ogni notte poco dopo mezzanotte (ora italiana): sposta gli eventi passati e aggiorna i dati per Google
     - cron: "10 23 * * *"
+    # ogni ora: aggiorna lo storico delle notifiche inviate dal sito di OneSignal
+    - cron: "40 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -39,6 +41,7 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL }}
           BASE_PATH: ${{ vars.BASE_PATH }}
           NOINDEX: ${{ vars.NOINDEX }}
+          ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
         run: python build.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
@@ -99,6 +102,11 @@ jobs:
           NOINDEX: ${{ vars.NOINDEX }}
           ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
         run: python notifica.py ${{ steps.nuovi.outputs.files }}
+      - name: Aggiorna lo storico sul sito
+        if: steps.nuovi.outputs.files != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: sleep 20 && gh workflow run pubblica.yml --ref main || true
 
   notifiche-pannello:
     # Notifiche scritte nel pannello (sezione "Notifiche"): invio subito o programmato, poi aggiorna lo stato
@@ -107,6 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -154,3 +163,8 @@ jobs:
             git commit -m "Stato notifiche aggiornato" || exit 0
             git pull --rebase --autostash origin main && git push origin HEAD:main
           fi
+      - name: Aggiorna lo storico sul sito
+        if: steps.file.outputs.salvati != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: sleep 20 && gh workflow run pubblica.yml --ref main || true

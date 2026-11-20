@@ -202,7 +202,7 @@
   }
   const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
   const ua = navigator.userAgent;
-  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1 && !/Android/.test(navigator.userAgent));
   const isSafari = /Safari/.test(ua) && !/Chrome|Chromium|CriOS|FxiOS|EdgiOS|Edg\//.test(ua);
   const macSafari = isSafari && !isIOS && /Macintosh/.test(ua);
   const isAndroid = /Android/.test(ua);
@@ -294,6 +294,22 @@
       if (Notification.permission === "granted" && !o.User.PushSubscription.optedIn) o.User.PushSubscription.optIn().catch(() => {});
       o.User.PushSubscription.addEventListener("change", aggiorna);
       aggiorna();
+      // tocco su una notifica (anche inviata dal sito di OneSignal): si apre il suo dettaglio nella pagina Notifiche
+      try {
+        o.Notifications.addEventListener("click", (ev) => {
+          const n = (ev && ev.notification) || {};
+          const u = n.launchURL || n.url || "";
+          if (u.includes("/notifiche?")) return;
+          const q = new URLSearchParams({ n: n.notificationId || n.id || "", t: n.title || "", m: n.body || "" });
+          if (u && u.replace(/\/$/, "") !== location.origin + BASE) q.set("l", u);
+          if (n.image) q.set("i", n.image);
+          if (window.__apriNotifica && location.pathname.endsWith("/notifiche")) {
+            window.__apriNotifica({ titolo: q.get("t"), messaggio: q.get("m"), link: q.get("l"), immagine: q.get("i"), quando: new Date().toISOString() });
+          } else {
+            location.href = BASE + "/notifiche?" + q.toString();
+          }
+        });
+      } catch (_) { /* versione OneSignal senza evento click */ }
     });
     // chiede di attivarle da solo: subito nell'app installata, dopo qualche secondo nel browser
     if (Notification.permission === "default" && !location.pathname.endsWith("/notifiche")) {

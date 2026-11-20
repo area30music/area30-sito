@@ -299,6 +299,55 @@ def to_date(v) -> date | None:
     return None
 
 
+def link_notifica(nid: str, titolo: str, messaggio: str, link: str = "", immagine: str = "") -> str:
+    """Indirizzo che si apre toccando la notifica: la pagina Notifiche con il dettaglio di quella notifica."""
+    q = {"n": nid, "t": titolo, "m": messaggio}
+    if link:
+        q["l"] = link
+    if immagine:
+        q["i"] = immagine
+    return abs_url("/notifiche") + "?" + urlencode(q, quote_via=quote)
+
+
+def carica_storico(app_id: str) -> list[dict]:
+    """Storico delle notifiche inviate, letto da OneSignal (serve la chiave, disponibile solo su GitHub)."""
+    key = os.environ.get("ONESIGNAL_REST_API_KEY", "").strip()
+    if not key or not app_id:
+        return []
+    import urllib.request
+    try:
+        req = urllib.request.Request(f"https://api.onesignal.com/notifications?app_id={app_id}&limit=50",
+                                     headers={"Authorization": f"Key {key}"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            dati = json.loads(r.read().decode())
+    except Exception as ex:  # noqa: BLE001
+        print(f"  ! storico notifiche non disponibile: {ex}", file=sys.stderr)
+        return []
+    out = []
+    for n in dati.get("notifications", []):
+        if n.get("canceled"):
+            continue
+        quando = n.get("send_after") or n.get("queued_at") or n.get("completed_at")
+        if not quando:
+            continue
+        h, c = n.get("headings") or {}, n.get("contents") or {}
+        titolo = (h.get("it") or h.get("en") or "AREA30").strip()
+        testo = (c.get("it") or c.get("en") or "").strip()
+        link = n.get("url") or n.get("web_url") or ""
+        # se il link è già il dettaglio della notifica, si recupera il link "vero" (es. pagina evento)
+        if "/notifiche?" in link:
+            from urllib.parse import urlparse, parse_qs
+            link = (parse_qs(urlparse(link).query).get("l") or [""])[0]
+        out.append({
+            "id": n.get("id", ""),
+            "titolo": titolo, "messaggio": testo, "link": link,
+            "immagine": n.get("chrome_web_image") or n.get("big_picture") or "",
+            "quando": datetime.fromtimestamp(int(quando), TZ).isoformat(),
+        })
+    out.sort(key=lambda x: x["quando"], reverse=True)
+    return out
+
+
 def norm_time(v) -> str:
     v = str(v or "").strip()
     if not re.match(r"^\d{1,2}[:.]\d{2}$", v):
@@ -609,7 +658,10 @@ def build():
         (OUT / "eventi" / f"{e.slug}.ics").write_text(ics(e, site), encoding="utf-8")
 
     if onesignal_id:
-        render("notifiche.html", "/notifiche", "notifiche.html", title="Notifiche e app | AREA30",
+        storico = carica_storico(onesignal_id)
+        print(f"  storico notifiche: {len(storico)}")
+        render("notifiche.html", "/notifiche", "notifiche.html", title="Notifiche | AREA30",
+               storico=storico, storico_json=json.dumps(storico, ensure_ascii=False).replace("</", "<\\/"),
                description="Attiva le notifiche di AREA30 per sapere subito quando annunciamo un nuovo concerto.",
                no_sitemap=True, noindex_page=True)
 

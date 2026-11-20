@@ -60,7 +60,7 @@ def main(files: list[str]) -> int:
             "included_segments": ["Total Subscriptions"],
             "headings": {"en": titolo, "it": titolo},
             "contents": {"en": testo, "it": testo},
-            "url": build.abs_url(e.path),
+            "url": build.link_notifica("evento-" + e.slug, titolo, testo, build.abs_url(e.path), e.og or ""),
             "chrome_web_icon": build.abs_url("/assets/icon-192.png"),
             "chrome_web_badge": build.abs_url("/assets/icon-192.png"),
             "web_push_topic": e.slug,
