@@ -14,7 +14,7 @@
     <h2 class="storico-h">Storico notifiche</h2>
     <div class="storico" id="storico">
       {% for n in storico %}
-      <button type="button" class="notif-card" data-id="{{ n.id }}" data-quando="{{ n.quando }}">
+      <button type="button" class="notif-card" data-server data-id="{{ n.id }}" data-quando="{{ n.quando }}">
         {% if n.immagine %}<img src="{{ n.immagine }}" alt="" loading="lazy" width="120" height="63">{% else %}<span class="notif-card-ico">{{ icon("bell") }}</span>{% endif %}
         <span class="notif-card-txt">
           <small class="notif-data" data-data="{{ n.quando }}"></small>
@@ -58,6 +58,7 @@
 
 <dialog class="notif-dialog" id="notif-dialog" aria-labelledby="nd-titolo">
   <form method="dialog"><button class="lb-btn nd-x" aria-label="Chiudi">{{ icon("close") }}</button></form>
+  <div class="nd-scroll">
   <img class="nd-img" alt="" hidden>
   <div class="nd-body">
     <p class="eyebrow nd-data"></p>
@@ -67,6 +68,7 @@
       <a class="btn btn-gold nd-link" hidden><span>Vai all'evento</span>{{ icon("arrow") }}</a>
       <form method="dialog"><button class="btn btn-ghost">Chiudi</button></form>
     </div>
+  </div>
   </div>
 </dialog>
 <script id="storico-dati" type="application/json">{{ storico_json|safe }}</script>
@@ -162,6 +164,31 @@
     var d = new Date(iso); if (isNaN(d)) return "";
     return d.getDate() + " " + MESI[d.getMonth()] + " " + d.getFullYear() + " · " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
   }
+  var CH = "area30-storico-locale", locali = [];
+  try { locali = JSON.parse(localStorage.getItem(CH) || "[]"); } catch (_) {}
+  function chiave(x) { return (x.id || "") + "|" + (x.titolo || "") + "|" + (x.messaggio || "").slice(0, 40); }
+  var noti = {}; dati.forEach(function (x) { noti[x.id] = 1; noti[chiave(x)] = 1; });
+  var box = document.getElementById("storico");
+  function aggiungiCard(x) {
+    if (noti[x.id] || noti[chiave(x)]) return;
+    noti[chiave(x)] = 1; if (x.id) noti[x.id] = 1;
+    dati.push(x);
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "notif-card"; b.dataset.id = x.id; b.dataset.quando = x.quando;
+    b.innerHTML = (x.immagine ? '<img alt="" loading="lazy" width="120" height="63">' : '<span class="notif-card-ico">🔔</span>') +
+      '<span class="notif-card-txt"><small class="notif-data"></small><b></b><span></span></span>';
+    if (x.immagine) b.querySelector("img").src = x.immagine;
+    b.querySelector(".notif-data").dataset.data = x.quando;
+    b.querySelector("b").textContent = x.titolo || "AREA30";
+    b.querySelector(".notif-card-txt > span").textContent = x.messaggio || "";
+    // in ordine di data
+    var dopo = Array.prototype.find.call(box.querySelectorAll(".notif-card"), function (c) { return c.dataset.quando < x.quando; });
+    box.insertBefore(b, dopo || document.getElementById("storico-vuoto"));
+    b.addEventListener("click", function () { apri(x); });
+    var dd = b.querySelector("[data-data]"); if (dd && typeof dataIt === "function") dd.textContent = dataIt(x.quando);
+    var vuoto = document.getElementById("storico-vuoto"); if (vuoto) vuoto.hidden = true;
+  }
+  locali.forEach(aggiungiCard);
   var adesso = Date.now(), visibili = 0;
   document.querySelectorAll(".notif-card").forEach(function (c) {
     if (Date.parse(c.dataset.quando) > adesso) { c.remove(); return; } // programmate: compaiono quando partono
@@ -179,19 +206,30 @@
     var img = dlg.querySelector(".nd-img"); img.hidden = !n.immagine; if (n.immagine) img.src = n.immagine;
     var a = dlg.querySelector(".nd-link"); a.hidden = !n.link;
     if (n.link) { a.href = n.link; a.querySelector("span").textContent = /\/eventi\//.test(n.link) ? "Vai all'evento" : "Apri"; }
-    if (!dlg.open) dlg.showModal();
+    if (!dlg.open) { dlg.showModal(); document.documentElement.classList.add("dialog-aperto"); dlg.querySelector(".nd-scroll").scrollTop = 0; }
   }
-  dlg.addEventListener("close", function () { if (location.search) history.replaceState(null, "", location.pathname); });
+  dlg.addEventListener("close", function () {
+    document.documentElement.classList.remove("dialog-aperto");
+    if (location.search) history.replaceState(null, "", location.pathname);
+  });
   dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
-  document.querySelectorAll(".notif-card").forEach(function (c) {
+  document.querySelectorAll(".notif-card[data-server]").forEach(function (c) {
     c.addEventListener("click", function () { apri(dati.find(function (x) { return x.id === c.dataset.id; })); });
   });
   window.__apriNotifica = apri;
   // aperta toccando la notifica: ?n=…&t=…&m=…&l=…&i=…
   var q = new URLSearchParams(location.search);
   if (q.get("n") || q.get("t")) {
-    var trovata = dati.find(function (x) { return x.id === q.get("n"); });
-    apri(trovata || { titolo: q.get("t"), messaggio: q.get("m"), link: q.get("l"), immagine: q.get("i"), quando: new Date().toISOString() });
+    var trovata = dati.find(function (x) { return x.id && x.id === q.get("n"); });
+    var nuova = trovata || { id: q.get("n") || "", titolo: q.get("t"), messaggio: q.get("m"), link: q.get("l"), immagine: q.get("i"), quando: new Date().toISOString() };
+    if (!trovata) {
+      try {
+        locali = locali.filter(function (x) { return chiave(x) !== chiave(nuova); });
+        locali.unshift(nuova); localStorage.setItem(CH, JSON.stringify(locali.slice(0, 50)));
+      } catch (_) {}
+      aggiungiCard(nuova);
+    }
+    apri(nuova);
   }
   document.getElementById("dettagli").addEventListener("toggle", function (e) { if (e.target.open) controlla(); });
   document.getElementById("attiva-ora").addEventListener("click", async function () {

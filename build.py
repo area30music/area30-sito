@@ -327,6 +327,37 @@ def onesignal_api(method: str, url: str, key: str, body: dict | None = None) -> 
     return {}
 
 
+ONESIGNAL_FILES = {
+    "OneSignalSDK.sw.js": "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js",
+    "OneSignalSDK.page.es6.js": "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.es6.js",
+}
+
+
+def onesignal_locale() -> dict:
+    """Copia locale dei file OneSignal (servono anche quando cdn.onesignal.com è bloccato da VPN o blocchi pubblicità)."""
+    import urllib.request
+    dest = OUT / "assets" / "onesignal"
+    dest.mkdir(parents=True, exist_ok=True)
+    cache = ROOT / ".cache" / "onesignal"
+    cache.mkdir(parents=True, exist_ok=True)
+    out = {}
+    for nome, src in ONESIGNAL_FILES.items():
+        f = cache / nome
+        try:
+            with urllib.request.urlopen(src, timeout=30) as r:
+                dati = r.read()
+            if len(dati) > 1000:
+                f.write_bytes(dati)
+        except Exception as ex:  # noqa: BLE001
+            print(f"  ! download {nome} non riuscito: {ex}", file=sys.stderr)
+        if f.exists():
+            shutil.copy2(f, dest / nome)
+            out[nome] = url(f"/assets/onesignal/{nome}") + "?v=" + hashlib.sha1(f.read_bytes()).hexdigest()[:8]
+        else:
+            out[nome] = src
+    return out
+
+
 def immagine_notifica(n: dict) -> str:
     """OneSignal salva l'immagine in campi diversi a seconda di come è stata creata la notifica."""
     for k in ("chrome_web_image", "big_picture", "chrome_big_picture", "adm_big_picture", "huawei_big_picture",
@@ -361,9 +392,6 @@ def carica_storico(app_id: str) -> list[dict]:
     out = []
     print(f"  OneSignal: total_count={dati.get('total_count')} ricevute={len(dati.get('notifications', []))}")
     for n in dati.get("notifications", []):
-        print("   -", str(n.get("id"))[:8], "canceled=", n.get("canceled"), "send_after=", n.get("send_after"),
-              "queued_at=", n.get("queued_at"), "completed_at=", n.get("completed_at"),
-              "successful=", n.get("successful"), "titolo=", (n.get("headings") or {}).get("en", "")[:30])
         if n.get("canceled"):
             continue
         quando = n.get("send_after") or n.get("queued_at") or n.get("completed_at")
@@ -567,6 +595,7 @@ def build():
     site = load_yaml(CONTENT / "sito.yml")
     # Notifiche: attive solo con l'ID di OneSignal e sul sito definitivo (non nell'anteprima)
     onesignal_id = str(site.get("onesignal_app_id") or "").strip() if not NOINDEX else ""
+    os_files = onesignal_locale() if onesignal_id else {}
     servizi = load_yaml(CONTENT / "servizi.yml").get("servizi", [])
     galleria = load_yaml(CONTENT / "galleria.yml").get("foto", []) or []
     stampa = load_yaml(CONTENT / "rassegna-stampa.yml").get("articoli", []) or []
@@ -626,7 +655,7 @@ def build():
                       trim_blocks=True, lstrip_blocks=True)
     env.globals.update(
         url=url, abs_url=abs_url, base_path=BASE_PATH, site=site, today=today, year=today.year, css=css, noindex=NOINDEX,
-        js_v=asset_version(ASSETS / "js" / "main.js"), icon_v=asset_version(ASSETS / "icon-512.png"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
+        js_v=asset_version(ASSETS / "js" / "main.js"), os_page_js=os_files.get("OneSignalSDK.page.es6.js", ""), icon_v=asset_version(ASSETS / "icon-512.png"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
         wa=lambda testo="": f"https://wa.me/{site['whatsapp']}" + (f"?text={quote(testo)}" if testo else ""),
     )
 
@@ -748,8 +777,9 @@ def build():
         # OneSignal gestisce ricezione e clic delle notifiche dentro lo stesso service worker
         sw = re.sub(r"/\* PUSH-PROPRIO-INIZIO[\s\S]*?PUSH-PROPRIO-FINE \*/", "", sw)
         # se OneSignal è bloccato (blocchi pubblicità, reti filtrate) l'app deve funzionare lo stesso
-        sw = ('try { importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js"); }'
-              ' catch (e) { /* OneSignal non raggiungibile: app e offline funzionano comunque */ }\n') + sw
+        clic = (ASSETS / "js" / "sw-clic.js").read_text(encoding="utf-8").replace("__BASE__", BASE_PATH)
+        sw = (clic + f'try {{ importScripts("{os_files["OneSignalSDK.sw.js"]}"); }}'
+              ' catch (e) { try { importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js"); } catch (e2) {} }\n') + sw
     (OUT / "sw.js").write_text(sw, encoding="utf-8")
     if onesignal_id:
         # stesso service worker anche con il nome predefinito di OneSignal: qualunque percorso usi, il comportamento è identico

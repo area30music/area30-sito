@@ -6,8 +6,8 @@ on:
   schedule:
     # ogni notte poco dopo mezzanotte (ora italiana): sposta gli eventi passati e aggiorna i dati per Google
     - cron: "10 23 * * *"
-    # ogni ora: aggiorna lo storico delle notifiche inviate dal sito di OneSignal
-    - cron: "40 * * * *"
+    # ogni 15 minuti: aggiorna lo storico delle notifiche inviate dal sito di OneSignal
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:

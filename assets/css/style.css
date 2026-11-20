@@ -476,7 +476,9 @@ a:hover .link-arrow .ico,.link-arrow:hover .ico{transform:translateX(5px)}
 .problemi summary{cursor:pointer;color:var(--muted)}
 .problemi h3{font-family:var(--f-display);text-transform:uppercase;font-size:1.3rem;margin:26px 0 10px}
 .spiegazione{margin:14px 0 0;color:#e7c97a}
-.notif-dialog{width:min(94vw,520px);max-height:calc(100svh - 32px);overflow-y:auto;overscroll-behavior:contain;padding:0;border:1px solid var(--line-gold);border-radius:22px;background:#141417;color:var(--text);box-shadow:0 40px 100px #000;overflow:hidden}
+html.dialog-aperto,html.dialog-aperto body{overflow:hidden}
+.nd-scroll{max-height:calc(100svh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.notif-dialog{width:min(94vw,520px);max-height:none;overflow:hidden;padding:0;border:1px solid var(--line-gold);border-radius:22px;background:#141417;color:var(--text);box-shadow:0 40px 100px #000;overflow:hidden}
 .notif-dialog::backdrop{background:rgba(5,5,6,.8);backdrop-filter:blur(4px)}
 .nd-img{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover}
 .nd-img[hidden]{display:none}
@@ -485,7 +487,7 @@ a:hover .link-arrow .ico,.link-arrow:hover .ico{transform:translateX(5px)}
 .nd-msg{color:#d6d4cd;font-size:1.05rem;white-space:pre-line}
 .nd-body .btn-row{margin-top:18px}
 .nd-body .btn-row form{display:contents}
-.nd-x{position:sticky!important;float:right;top:12px;margin:12px 12px -52px 0;z-index:2;background:rgba(0,0,0,.6)}
+.nd-x{position:absolute!important;top:12px;right:12px;z-index:3;background:rgba(0,0,0,.6)}
 .nd-link[hidden]{display:none}
 
 /* Rivelazione allo scorrimento */

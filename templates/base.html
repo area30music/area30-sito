@@ -208,7 +208,7 @@ window.addEventListener("error", function (e) { try { window.__osErroriJs.push(S
 window.addEventListener("unhandledrejection", function (e) { try { window.__osErroriJs.push("promise: " + String(e.reason && (e.reason.message || e.reason))); } catch (_) {} });
 window.addEventListener("load", function () { setTimeout(function () { if (window.__osStato === "caricamento") window.__osStato = "sdk-non-caricato"; }, 4000); });
 </script>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer onerror="window.__osStato='sdk-bloccato'"></script>
+<script src="{{ os_page_js }}" defer onerror="window.__osStato='sdk-bloccato'"></script>
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 OneSignalDeferred.push(async function (OneSignal) {
