@@ -16,6 +16,12 @@
       <button type="button" class="btn btn-ghost btn-lg" data-install hidden>{{ icon("download") }}<span>Installa l'app</span></button>
     </div>
     <p class="hint" id="codice-disp"></p>
+    <p class="lead" id="spiegazione" hidden style="margin-top:18px"></p>
+    <details class="guida-box" id="dettagli">
+      <summary><b>Dettagli tecnici</b> (mandali ad AREA30 se le notifiche non funzionano)</summary>
+      <ul class="stato-grid" style="margin-top:14px" id="tecnici"></ul>
+      <button type="button" class="btn btn-ghost" id="riprova">Riprova il collegamento</button>
+    </details>
 
     <div class="guida-box">
       <h2>iPhone e iPad</h2>
@@ -63,14 +69,44 @@
     if (!N || !N.configurate) { set("servizio", "Non configurato", false); set("iscritto", "No", false); btn.hidden = true; return; }
     set("servizio", "Collegamento in corso…");
     var os = await N.osPronto(12000);
-    if (!os) { set("servizio", window.__osErrore ? "Errore: " + window.__osErrore : "Non raggiungibile", false); }
+    if (!os) {
+      var st = window.__osStato;
+      var testo = st === "sdk-bloccato" || st === "sdk-non-caricato" ? "Bloccato" : st === "avvio" ? "Non risponde" : st === "errore" ? "Errore" : "Non raggiungibile";
+      set("servizio", testo, false);
+      var sp = document.getElementById("spiegazione");
+      sp.hidden = false;
+      sp.textContent = st === "sdk-bloccato" || st === "sdk-non-caricato"
+        ? "Il servizio delle notifiche non si è caricato. Di solito succede con un blocco pubblicità o contenuti (es. AdGuard, 1Blocker, AdBlock), una VPN o il DNS privato: disattivalo per area30.it, chiudi l'app e riaprila."
+        : st === "avvio" ? "Il servizio delle notifiche si è caricato ma non ha completato il collegamento. Chiudi del tutto l'app (scorri verso l'alto) e riaprila; se non cambia, manda ad AREA30 i dettagli tecnici qui sotto."
+        : "Errore del servizio notifiche: " + (window.__osErrore || "sconosciuto");
+    }
     else set("servizio", "Collegato", true);
+    tecnici(os);
     var ok = !!(os && os.User.PushSubscription.optedIn);
     set("iscritto", ok ? "Sì ✓" : "No", ok);
     btn.hidden = ok || perm === "denied" || (ios && !standalone);
     var id = os && os.User.PushSubscription.id;
     document.getElementById("codice-disp").textContent = id ? "Codice dispositivo: " + id.slice(0, 8) : "";
   }
+  async function tecnici(os) {
+    var righe = [];
+    righe.push(["Stato OneSignal", String(window.__osStato) + (window.__osAvvio ? " (" + Math.round((Date.now() - window.__osAvvio) / 1000) + " s)" : "")]);
+    righe.push(["Libreria OneSignal", typeof window.OneSignal === "undefined" ? "assente" : (Array.isArray(window.OneSignal) ? "non avviata" : "presente")]);
+    try {
+      var regs = await navigator.serviceWorker.getRegistrations();
+      righe.push(["Service worker", regs.length ? regs.map(function (r) { var w = r.active || r.waiting || r.installing; return (w ? w.state : "nessuno") + " · " + (w ? w.scriptURL.split("/").pop() : "") + " · " + r.scope.replace(location.origin, ""); }).join(" | ") : "nessuno"]);
+      righe.push(["Pagina controllata", navigator.serviceWorker.controller ? "sì" : "no"]);
+      var reg = regs[0];
+      var sub = reg && reg.pushManager ? await reg.pushManager.getSubscription() : null;
+      righe.push(["Iscrizione push del telefono", sub ? "presente (" + new URL(sub.endpoint).host + ")" : "assente"]);
+    } catch (e) { righe.push(["Service worker", "errore: " + e.message]); }
+    if (os) { try { righe.push(["ID OneSignal", String(os.User.PushSubscription.id || "nessuno")]); } catch (_) {} }
+    var m = navigator.userAgent.match(/OS (\d+[_\d]*)/);
+    righe.push(["Sistema", m ? "iOS " + m[1].replace(/_/g, ".") : navigator.platform]);
+    righe.push(["Errori", (window.__osErroriJs || []).slice(-3).join(" ; ") || "nessuno"]);
+    document.getElementById("tecnici").innerHTML = righe.map(function (r) { return "<li><span>" + r[0] + "</span><b style=\"font-weight:500;font-size:.85rem;word-break:break-all\">" + r[1].replace(/</g, "&lt;") + "</b></li>"; }).join("");
+  }
+  document.getElementById("riprova").addEventListener("click", function () { location.reload(); });
   document.getElementById("attiva-ora").addEventListener("click", async function () {
     if (window.__area30Notifiche) await window.__area30Notifiche.richiedi();
     controlla();

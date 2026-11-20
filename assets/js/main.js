@@ -240,7 +240,7 @@
   $$("[data-notify-no]").forEach((b) => b.addEventListener("click", () => chiudiSheet(true)));
 
   // OneSignal pronto (con attesa massima)
-  const osPronto = (ms = 10000) => new Promise((res) => {
+  const osPronto = (ms = 20000) => new Promise((res) => {
     if (window.__osPronto) return res(window.__osPronto);
     if (window.__osErrore || !configurate) return res(null);
     const t = setTimeout(() => res(window.__osPronto || null), ms);
@@ -275,7 +275,8 @@
       } else {
         // OneSignal non ancora pronto: chiede subito il permesso al telefono (deve avvenire dentro il tocco)
         await Notification.requestPermission();
-        const o = await osPronto();
+        chiudiSheet(false); aggiorna();
+        const o = await osPronto(20000);
         if (o && Notification.permission === "granted" && !o.User.PushSubscription.optedIn) await o.User.PushSubscription.optIn();
       }
     } catch (_) { /* niente */ }

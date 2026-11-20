@@ -201,10 +201,19 @@
 </div>
 
 {% if onesignal_id %}
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+window.__osStato = "caricamento";
+window.__osErroriJs = [];
+window.addEventListener("error", function (e) { try { window.__osErroriJs.push(String(e.message || (e.target && e.target.src) || "errore")); } catch (_) {} }, true);
+window.addEventListener("unhandledrejection", function (e) { try { window.__osErroriJs.push("promise: " + String(e.reason && (e.reason.message || e.reason))); } catch (_) {} });
+window.addEventListener("load", function () { setTimeout(function () { if (window.__osStato === "caricamento") window.__osStato = "sdk-non-caricato"; }, 4000); });
+</script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer onerror="window.__osStato='sdk-bloccato'"></script>
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 OneSignalDeferred.push(async function (OneSignal) {
+  window.__osStato = "avvio";
+  window.__osAvvio = Date.now();
   try {
     await OneSignal.init({
       appId: "{{ onesignal_id }}",
@@ -214,9 +223,11 @@ OneSignalDeferred.push(async function (OneSignal) {
       promptOptions: { slidedown: { prompts: [] } }
     });
     window.__osPronto = OneSignal;
+    window.__osStato = "ok";
     window.dispatchEvent(new CustomEvent("onesignal-pronto"));
   } catch (e) {
     window.__osErrore = String(e && e.message || e);
+    window.__osStato = "errore";
     window.dispatchEvent(new CustomEvent("onesignal-errore"));
   }
 });
