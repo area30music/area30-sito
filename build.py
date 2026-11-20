@@ -529,7 +529,7 @@ def build():
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["html", "xml"]),
                       trim_blocks=True, lstrip_blocks=True)
     env.globals.update(
-        url=url, abs_url=abs_url, site=site, today=today, year=today.year, css=css, noindex=NOINDEX,
+        url=url, abs_url=abs_url, base_path=BASE_PATH, site=site, today=today, year=today.year, css=css, noindex=NOINDEX,
         js_v=asset_version(ASSETS / "js" / "main.js"), data_it=data_it, prossimi=prossimi,
         wa=lambda testo="": f"https://wa.me/{site['whatsapp']}" + (f"?text={quote(testo)}" if testo else ""),
     )
@@ -616,11 +616,31 @@ def build():
     (OUT / "llms.txt").write_text(env.get_template("llms.txt").render(
         prossimi=prossimi, passati=passati, servizi=servizi), encoding="utf-8")
     (OUT / "site.webmanifest").write_text(json.dumps({
-        "name": "AREA30", "short_name": "AREA30", "lang": "it", "start_url": url("/"),
-        "display": "standalone", "background_color": "#0a0a0c", "theme_color": "#0a0a0c",
-        "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192", "type": "image/png"},
-                  {"src": url("/assets/icon-512.png"), "sizes": "512x512", "type": "image/png"}]},
+        "id": url("/"), "name": "AREA30 – Eventi live e service audio luci", "short_name": "AREA30",
+        "description": "Prossimi concerti AREA30 a Sommariva del Bosco: biglietti, calendario e notizie.",
+        "lang": "it", "dir": "ltr", "start_url": url("/?app=1"), "scope": url("/"),
+        "display": "standalone", "display_override": ["standalone", "minimal-ui"], "orientation": "any",
+        "background_color": "#09090b", "theme_color": "#09090b", "categories": ["music", "entertainment", "events"],
+        "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192", "type": "image/png", "purpose": "any"},
+                  {"src": url("/assets/icon-512.png"), "sizes": "512x512", "type": "image/png", "purpose": "any"},
+                  {"src": url("/assets/icon-maskable-512.png"), "sizes": "512x512", "type": "image/png", "purpose": "maskable"}],
+        "shortcuts": [
+            {"name": "Prossimi eventi", "url": url("/#eventi"), "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192"}]},
+            {"name": "Eventi passati", "url": url("/eventi-passati"), "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192"}]},
+            {"name": "Contatti", "url": url("/contattaci"), "icons": [{"src": url("/assets/icon-192.png"), "sizes": "192x192"}]}]},
         ensure_ascii=False), encoding="utf-8")
+
+    # Web app: pagina offline + service worker (la versione cambia a ogni pubblicazione)
+    render("offline.html", "/offline", "offline.html", title="Sei offline | AREA30",
+           description="Nessuna connessione a Internet.", no_sitemap=True, noindex_page=True)
+    precache = [url("/"), url("/offline.html"), url("/assets/js/main.js") + "?v=" + env.globals["js_v"],
+                url("/assets/logo-area30.png"), url("/assets/icon-192.png"),
+                url("/assets/fonts/big-shoulders.woff2"), url("/assets/fonts/manrope.woff2")]
+    ver = hashlib.sha1("".join(sorted(p.name + str(p.stat().st_size) for p in OUT.rglob("*.html"))).encode()
+                       + datetime.now(TZ).date().isoformat().encode()).hexdigest()[:10]
+    sw = (ASSETS / "js" / "sw.js").read_text(encoding="utf-8")
+    sw = sw.replace("__VERSIONE__", ver).replace("__BASE__", BASE_PATH).replace("__PRECACHE__", json.dumps(precache))
+    (OUT / "sw.js").write_text(sw, encoding="utf-8")
     shutil.copy2(ASSETS / "favicon.ico", OUT / "favicon.ico")
     (OUT / ".nojekyll").write_text("")
     if (ROOT / "CNAME").exists() and not BASE_PATH:

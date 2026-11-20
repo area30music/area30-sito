@@ -194,4 +194,40 @@
     b.hidden = false;
     b.addEventListener("click", () => navigator.share({ title: b.dataset.title, url: b.dataset.url }).catch(() => {}));
   });
+
+  /* Web app: service worker e pulsante "Installa l'app" */
+  const BASE = root.dataset.base || "";
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    window.addEventListener("load", () => navigator.serviceWorker.register(BASE + "/sw.js", { scope: BASE + "/" }).catch(() => {}));
+  }
+  const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isSafari = /Safari/.test(ua) && !/Chrome|Chromium|CriOS|FxiOS|EdgiOS|Edg\//.test(ua);
+  const macSafari = isSafari && !isIOS && /Macintosh/.test(ua);
+  const dialog = $("#install-dialog");
+  let deferred = null;
+  const showInstall = (on) => {
+    $$("[data-install]").forEach((b) => { b.hidden = !on; });
+    $$("[data-install-band]").forEach((b) => { b.hidden = !on; });
+  };
+  if (!standalone) {
+    if ((isIOS && isSafari) || macSafari) showInstall(true);
+    window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e; showInstall(true); });
+    window.addEventListener("appinstalled", () => { deferred = null; showInstall(false); });
+    document.addEventListener("click", async (e) => {
+      if (!e.target.closest("[data-install]")) return;
+      if (deferred) {
+        deferred.prompt();
+        const r = await deferred.userChoice.catch(() => null);
+        if (r && r.outcome === "accepted") showInstall(false);
+        deferred = null;
+      } else if (dialog && dialog.showModal) {
+        dialog.dataset.os = isIOS ? "ios" : "mac";
+        setMenu(false);
+        dialog.showModal();
+      }
+    });
+    if (dialog) dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
+  }
 })();

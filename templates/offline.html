@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "_macro.html" import icon %}
+{% block content %}
+<section class="page-hero page-hero--full">
+  <div class="beams" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap">
+    <p class="eyebrow">Nessuna connessione</p>
+    <h1 class="display">Sei offline</h1>
+    <p class="lead">Questa pagina non è ancora salvata sul tuo dispositivo. Riprova appena torna la connessione.</p>
+    <div class="btn-row"><button type="button" class="btn btn-gold" onclick="location.reload()"><span>Riprova</span></button><a class="btn btn-ghost" href="{{ url('/') }}"><span>Home</span></a></div>
+  </div>
+</section>
+{% endblock %}

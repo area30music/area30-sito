@@ -1,6 +1,6 @@
 {% from "_macro.html" import icon %}
 <!doctype html>
-<html lang="it">
+<html lang="it" data-base="{{ base_path }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -56,6 +56,9 @@
     <symbol id="i-left" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m15 5-7 7 7 7"/></symbol>
     <symbol id="i-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/></symbol>
     <symbol id="i-expand" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/></g></symbol>
     <symbol id="i-mic" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4M8 22h8"/></g></symbol>
     <symbol id="i-light" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-2 7H9z"/><path d="M9 10 5 21M15 10l4 11M12 10v11"/></g></symbol>
     <symbol id="i-wave" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M2 12h2M6 8v8M10 4v16M14 7v10M18 10v4M22 12h0"/></symbol>
@@ -78,6 +81,7 @@
       <div class="nav-extra">
         <a href="tel:{{ site.telefono_link }}">{{ icon("phone") }} {{ site.telefono }}</a>
         <a href="mailto:{{ site.email }}">{{ icon("mail") }} {{ site.email }}</a>
+        <button type="button" class="install-link" data-install hidden>{{ icon("download") }} Installa l'app AREA30</button>
         <div class="social">
           {% for k, v in site.social.items() if v %}<a href="{{ v }}" target="_blank" rel="noopener" aria-label="AREA30 su {{ {'facebook':'Facebook','instagram':'Instagram','youtube':'YouTube','tiktok':'TikTok'}.get(k, k|capitalize) }}">{{ icon(k) }}</a>{% endfor %}
         </div>
@@ -123,6 +127,7 @@
         <li><a href="{{ url('/eventi-passati') }}">Eventi passati</a></li>
         <li><a href="{{ url('/parlano-di-noi') }}">Parlano di noi</a></li>
         <li><a href="{{ url('/contattaci') }}">Contatti</a></li>
+        <li><button type="button" class="install-link" data-install hidden>{{ icon("download") }} Installa l'app</button></li>
       </ul>
     </div>
   </div>
@@ -133,6 +138,22 @@
 </footer>
 
 <a class="wa-float" href="{{ wa('Ciao AREA30, vorrei informazioni') }}" target="_blank" rel="noopener" aria-label="Scrivici su WhatsApp">{{ icon("whatsapp") }}</a>
+
+<dialog class="install-dialog" id="install-dialog" aria-labelledby="install-h">
+  <form method="dialog"><button class="lb-btn install-close" aria-label="Chiudi">{{ icon("close") }}</button></form>
+  <img src="{{ url('/assets/icon-192.png') }}" alt="" width="72" height="72" class="install-icon">
+  <h2 id="install-h">Installa l'app AREA30</h2>
+  <ol class="install-steps" data-os="ios">
+    <li>Tocca il pulsante <b>Condividi</b> {{ icon("share") }} di Safari.</li>
+    <li>Scorri e scegli <b>Aggiungi alla schermata Home</b> {{ icon("plus") }}.</li>
+    <li>Tocca <b>Aggiungi</b>: trovi AREA30 tra le tue app.</li>
+  </ol>
+  <ol class="install-steps" data-os="mac">
+    <li>In Safari apri il menu <b>File</b> (oppure il pulsante <b>Condividi</b> {{ icon("share") }}).</li>
+    <li>Scegli <b>Aggiungi al Dock</b>.</li>
+    <li>Premi <b>Aggiungi</b>: AREA30 compare nel Dock e in Launchpad.</li>
+  </ol>
+</dialog>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Galleria foto" hidden>
   <button class="lb-btn lb-close" type="button" aria-label="Chiudi">{{ icon("close") }}</button>
