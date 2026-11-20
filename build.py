@@ -327,6 +327,27 @@ def onesignal_api(method: str, url: str, key: str, body: dict | None = None) -> 
     return {}
 
 
+def immagine_notifica(n: dict) -> str:
+    """OneSignal salva l'immagine in campi diversi a seconda di come è stata creata la notifica."""
+    for k in ("chrome_web_image", "big_picture", "chrome_big_picture", "adm_big_picture", "huawei_big_picture",
+              "web_push_big_picture", "image", "global_image"):
+        v = n.get(k)
+        if isinstance(v, str) and v.startswith("http"):
+            return v
+    att = n.get("ios_attachments")
+    if isinstance(att, dict):
+        for v in att.values():
+            if isinstance(v, str) and v.startswith("http"):
+                return v
+    for k, v in n.items():  # qualunque altro campo con "image" o "picture"
+        if ("image" in k or "picture" in k) and isinstance(v, str) and v.startswith("http"):
+            return v
+    campi = [k for k, v in n.items() if ("image" in k or "picture" in k or "attach" in k) and v]
+    if campi:
+        print(f"  (notifica {str(n.get('id'))[:8]}: campi immagine non riconosciuti {campi})", file=sys.stderr)
+    return ""
+
+
 def carica_storico(app_id: str) -> list[dict]:
     """Storico delle notifiche inviate, letto da OneSignal (serve la chiave, disponibile solo su GitHub)."""
     key = os.environ.get("ONESIGNAL_REST_API_KEY", "").strip()
@@ -355,7 +376,7 @@ def carica_storico(app_id: str) -> list[dict]:
         out.append({
             "id": n.get("id", ""),
             "titolo": titolo, "messaggio": testo, "link": link,
-            "immagine": n.get("chrome_web_image") or n.get("big_picture") or "",
+            "immagine": immagine_notifica(n),
             "quando": datetime.fromtimestamp(int(quando), TZ).isoformat(),
         })
     out.sort(key=lambda x: x["quando"], reverse=True)
