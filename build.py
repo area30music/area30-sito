@@ -608,6 +608,11 @@ def build():
                priority="0.5" if e.passato else "0.9")
         (OUT / "eventi" / f"{e.slug}.ics").write_text(ics(e, site), encoding="utf-8")
 
+    if onesignal_id:
+        render("notifiche.html", "/notifiche", "notifiche.html", title="Notifiche e app | AREA30",
+               description="Attiva le notifiche di AREA30 per sapere subito quando annunciamo un nuovo concerto.",
+               no_sitemap=True, noindex_page=True)
+
     render("404.html", "/404", "404.html", title="Pagina non trovata | AREA30",
            description="La pagina che cerchi non esiste.", no_sitemap=True, noindex_page=True)
 

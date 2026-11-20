@@ -83,6 +83,7 @@
         <a href="tel:{{ site.telefono_link }}">{{ icon("phone") }} {{ site.telefono }}</a>
         <a href="mailto:{{ site.email }}">{{ icon("mail") }} {{ site.email }}</a>
         <button type="button" class="install-link" data-install hidden>{{ icon("download") }} Installa l'app AREA30</button>
+        {% if onesignal_id %}<a href="{{ url('/notifiche') }}">{{ icon("bell") }} Notifiche</a>{% endif %}
         <div class="social">
           {% for k, v in site.social.items() if v %}<a href="{{ v }}" target="_blank" rel="noopener" aria-label="AREA30 su {{ {'facebook':'Facebook','instagram':'Instagram','youtube':'YouTube','tiktok':'TikTok'}.get(k, k|capitalize) }}">{{ icon(k) }}</a>{% endfor %}
         </div>
@@ -130,7 +131,7 @@
         <li><a href="{{ url('/parlano-di-noi') }}">Parlano di noi</a></li>
         <li><a href="{{ url('/contattaci') }}">Contatti</a></li>
         <li><button type="button" class="install-link" data-install hidden>{{ icon("download") }} Installa l'app</button></li>
-        <li><button type="button" class="install-link" data-notify hidden>{{ icon("bell") }} <span data-notify-label>Attiva le notifiche</span></button></li>
+        {% if onesignal_id %}<li><a href="{{ url('/notifiche') }}">Notifiche e app</a></li>{% endif %}
       </ul>
     </div>
   </div>
@@ -150,10 +151,12 @@
     <h2 id="notify-h">Non perderti i prossimi concerti</h2>
     <p data-mode="attiva">Attiva le notifiche: ti avvisiamo quando annunciamo un nuovo evento AREA30.</p>
     <p data-mode="ios">Su iPhone e iPad le notifiche arrivano solo con l’app installata sulla schermata Home.</p>
+    <p data-mode="bloccate">Le notifiche sono bloccate sul tuo dispositivo. Ti spieghiamo come riattivarle in un attimo.</p>
   </div>
   <div class="notify-actions">
     <button type="button" class="btn btn-gold" data-mode="attiva" data-notify-yes>{{ icon("bell") }}<span>Attiva le notifiche</span></button>
     <button type="button" class="btn btn-gold" data-mode="ios" data-install>{{ icon("download") }}<span>Installa l’app</span></button>
+    <a class="btn btn-gold" data-mode="bloccate" href="{{ url('/notifiche') }}">Come riattivarle</a>
     <button type="button" class="btn btn-ghost" data-notify-no>Non ora</button>
   </div>
 </div>
@@ -202,14 +205,20 @@
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 OneSignalDeferred.push(async function (OneSignal) {
-  await OneSignal.init({
-    appId: "{{ onesignal_id }}",
-    serviceWorkerPath: "{{ url('/sw.js')|trim('/') }}",
-    serviceWorkerParam: { scope: "{{ url('/') }}" },
-    notifyButton: { enable: false },
-    promptOptions: { slidedown: { prompts: [] } }
-  });
-  window.dispatchEvent(new CustomEvent("onesignal-pronto"));
+  try {
+    await OneSignal.init({
+      appId: "{{ onesignal_id }}",
+      serviceWorkerPath: "{{ url('/sw.js')|trim('/') }}",
+      serviceWorkerParam: { scope: "{{ url('/') }}" },
+      notifyButton: { enable: false },
+      promptOptions: { slidedown: { prompts: [] } }
+    });
+    window.__osPronto = OneSignal;
+    window.dispatchEvent(new CustomEvent("onesignal-pronto"));
+  } catch (e) {
+    window.__osErrore = String(e && e.message || e);
+    window.dispatchEvent(new CustomEvent("onesignal-errore"));
+  }
 });
 </script>
 {% endif %}

@@ -223,9 +223,11 @@
   const bell = $("[data-notify-bell]");
   const sheet = $("#notify-sheet");
   const CHIAVE = "area30-notifiche-non-ora";
+  const configurate = !!window.OneSignalDeferred;
+  const supportate = "Notification" in window && "serviceWorker" in navigator && "PushManager" in window;
   const rimandato = () => { try { return Date.now() - (+localStorage.getItem(CHIAVE) || 0) < 7 * 864e5; } catch (_) { return false; } };
-  const apriSheet = (modo) => {
-    if (!sheet || rimandato() || document.body.classList.contains("menu-open")) return;
+  const apriSheet = (modo, forza) => {
+    if (!sheet || (!forza && rimandato()) || document.body.classList.contains("menu-open")) return;
     sheet.dataset.mode = modo; sheet.hidden = false;
     requestAnimationFrame(() => requestAnimationFrame(() => sheet.classList.add("open")));
   };
@@ -236,39 +238,70 @@
     if (rimanda) { try { localStorage.setItem(CHIAVE, String(Date.now())); } catch (_) { /* niente */ } }
   };
   $$("[data-notify-no]").forEach((b) => b.addEventListener("click", () => chiudiSheet(true)));
-  const setNotify = (stato) => {
+
+  // OneSignal pronto (con attesa massima)
+  const osPronto = (ms = 10000) => new Promise((res) => {
+    if (window.__osPronto) return res(window.__osPronto);
+    if (window.__osErrore || !configurate) return res(null);
+    const t = setTimeout(() => res(window.__osPronto || null), ms);
+    window.addEventListener("onesignal-pronto", () => { clearTimeout(t); res(window.__osPronto); }, { once: true });
+    window.addEventListener("onesignal-errore", () => { clearTimeout(t); res(null); }, { once: true });
+  });
+  const iscritto = () => !!(window.__osPronto && window.__osPronto.User.PushSubscription.optedIn);
+  const statoAttuale = () => {
+    if (!supportate) return "nascosto";
+    if (Notification.permission === "denied") return "bloccate";
+    if (Notification.permission === "granted" && (iscritto() || !window.__osPronto)) return "attivo";
+    return "spento";
+  };
+  const aggiorna = () => {
+    const stato = statoAttuale();
     notifyBtns.forEach((b) => {
-      b.hidden = stato === "nascosto";
+      b.hidden = stato === "nascosto" || stato === "bloccate";
       b.classList.toggle("attivo", stato === "attivo");
       const l = $("[data-notify-label]", b);
       if (l) l.textContent = stato === "attivo" ? "Notifiche attive ✓" : (b.closest(".app-band") ? "Avvisami dei nuovi concerti" : "Attiva le notifiche");
     });
     if (bell) bell.hidden = stato !== "spento";
     band();
+    window.dispatchEvent(new CustomEvent("notifiche-stato", { detail: stato }));
   };
-  const pushOk = window.OneSignalDeferred && "Notification" in window;
-  if (pushOk && (!isIOS || standalone)) {
-    window.OneSignalDeferred.push((OneSignal) => {
-      const aggiorna = () => setNotify(OneSignal.User.PushSubscription.optedIn ? "attivo" : (Notification.permission === "denied" ? "nascosto" : "spento"));
-      const richiedi = async () => {
-        if (!OneSignal.User.PushSubscription.optedIn) {
-          if (Notification.permission === "granted") await OneSignal.User.PushSubscription.optIn();
-          else await OneSignal.Notifications.requestPermission();
-        }
-        aggiorna(); chiudiSheet(false);
-      };
-      aggiorna();
-      OneSignal.User.PushSubscription.addEventListener("change", aggiorna);
-      [...notifyBtns, ...$$("[data-notify-yes]"), bell].filter(Boolean).forEach((b) => b.addEventListener("click", richiedi));
-      // chiede di attivarle da solo: subito nell'app installata, dopo qualche secondo nel browser
-      if (!OneSignal.User.PushSubscription.optedIn && Notification.permission !== "denied") {
-        setTimeout(() => { if (!OneSignal.User.PushSubscription.optedIn) apriSheet("attiva"); }, standalone ? 1200 : 8000);
+  const richiedi = async () => {
+    const os = window.__osPronto;
+    try {
+      if (os) {
+        if (Notification.permission === "granted") await os.User.PushSubscription.optIn();
+        else await os.Notifications.requestPermission();
+      } else {
+        // OneSignal non ancora pronto: chiede subito il permesso al telefono (deve avvenire dentro il tocco)
+        await Notification.requestPermission();
+        const o = await osPronto();
+        if (o && Notification.permission === "granted" && !o.User.PushSubscription.optedIn) await o.User.PushSubscription.optIn();
       }
+    } catch (_) { /* niente */ }
+    chiudiSheet(false);
+    aggiorna();
+    if (Notification.permission === "denied") apriSheet("bloccate", true);
+  };
+  window.__area30Notifiche = { richiedi, statoAttuale, osPronto, configurate, supportate };
+
+  if (configurate && supportate && (!isIOS || standalone)) {
+    [...notifyBtns, ...$$("[data-notify-yes]"), bell].filter(Boolean).forEach((b) => b.addEventListener("click", richiedi));
+    aggiorna();
+    osPronto().then((o) => {
+      if (!o) return;
+      if (Notification.permission === "granted" && !o.User.PushSubscription.optedIn) o.User.PushSubscription.optIn().catch(() => {});
+      o.User.PushSubscription.addEventListener("change", aggiorna);
+      aggiorna();
     });
-  } else if (pushOk && isIOS && !standalone) {
+    // chiede di attivarle da solo: subito nell'app installata, dopo qualche secondo nel browser
+    if (Notification.permission === "default" && !location.pathname.endsWith("/notifiche")) {
+      setTimeout(() => { if (Notification.permission === "default") apriSheet("attiva"); }, standalone ? 1200 : 8000);
+    }
+  } else if (configurate && isIOS && !standalone) {
     // iPhone/iPad nel browser: per le notifiche serve l'app installata
-    if (bell) { bell.hidden = false; bell.addEventListener("click", () => { try { localStorage.removeItem(CHIAVE); } catch (_) { /* niente */ } apriSheet("ios"); }); }
-    setTimeout(() => apriSheet("ios"), 10000);
+    if (bell) { bell.hidden = false; bell.addEventListener("click", () => apriSheet("ios", true)); }
+    if (!location.pathname.endsWith("/notifiche")) setTimeout(() => apriSheet("ios"), 10000);
   }
   if (!standalone) {
     // il pulsante è sempre visibile: dove il browser lo permette installa con un tocco, altrimenti spiega come fare

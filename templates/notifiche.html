@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% from "_macro.html" import icon, page_hero %}
+{% block content %}
+{{ page_hero("Notifiche", "Ricevi un avviso quando AREA30 annuncia un nuovo concerto o un evento speciale.", "App e avvisi") }}
+<section class="section" style="padding-top:0">
+  <div class="wrap notifiche-wrap">
+    <ul class="stato-grid" id="stato-notifiche">
+      <li><span>Il tuo dispositivo supporta le notifiche</span><b data-s="supporto">…</b></li>
+      <li><span>Aperto come app installata</span><b data-s="app">…</b></li>
+      <li><span>Permesso del telefono</span><b data-s="permesso">…</b></li>
+      <li><span>Collegamento al servizio notifiche</span><b data-s="servizio">…</b></li>
+      <li><span>Iscritto agli avvisi AREA30</span><b data-s="iscritto">…</b></li>
+    </ul>
+    <div class="btn-row" style="margin-top:0">
+      <button type="button" class="btn btn-gold btn-lg" id="attiva-ora">{{ icon("bell") }}<span>Attiva le notifiche</span></button>
+      <button type="button" class="btn btn-ghost btn-lg" data-install hidden>{{ icon("download") }}<span>Installa l'app</span></button>
+    </div>
+    <p class="hint" id="codice-disp"></p>
+
+    <div class="guida-box">
+      <h2>iPhone e iPad</h2>
+      <ol>
+        <li>Le notifiche funzionano solo con l'app installata: in Safari tocca <b>Condividi</b> → <b>Aggiungi alla schermata Home</b> → lascia attivo <b>Apri come app web</b> → <b>Aggiungi</b>.</li>
+        <li>Apri l'app <b>AREA30</b> dalla schermata Home (non da Safari) e tocca <b>Attiva le notifiche</b>, poi <b>Consenti</b>.</li>
+        <li>Se avevi risposto "Non consentire": <b>Impostazioni</b> del telefono → <b>Notifiche</b> → <b>AREA30</b> → attiva <b>Consenti notifiche</b>.</li>
+        <li>Serve iOS 16.4 o successivo (Impostazioni → Generali → Info).</li>
+      </ol>
+    </div>
+    <div class="guida-box">
+      <h2>Android</h2>
+      <ol>
+        <li>Tocca <b>Attiva le notifiche</b> e poi <b>Consenti</b>.</li>
+        <li>Se le avevi bloccate: tocca il lucchetto accanto all'indirizzo area30.it → <b>Autorizzazioni</b> → <b>Notifiche</b> → <b>Consenti</b>. Nell'app installata: tieni premuta l'icona AREA30 → <b>Info app</b> → <b>Notifiche</b>.</li>
+      </ol>
+    </div>
+    <div class="guida-box">
+      <h2>Computer</h2>
+      <ol>
+        <li>Tocca <b>Attiva le notifiche</b> e poi <b>Consenti</b>.</li>
+        <li>Se le avevi bloccate: clicca il lucchetto accanto all'indirizzo → <b>Notifiche</b> → <b>Consenti</b>. Sul Mac controlla anche Impostazioni di Sistema → Notifiche.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+<script>
+(function () {
+  function set(k, testo, ok) {
+    var b = document.querySelector('[data-s="' + k + '"]');
+    if (!b) return;
+    b.textContent = testo;
+    b.className = ok === true ? "stato-ok" : ok === false ? "stato-no" : "";
+  }
+  async function controlla() {
+    var N = window.__area30Notifiche;
+    var standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+    var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var supp = "Notification" in window && "PushManager" in window && "serviceWorker" in navigator;
+    set("supporto", supp ? "Sì" : (ios && !standalone ? "Solo con l'app installata" : "No"), supp);
+    set("app", standalone ? "Sì" : "No", standalone ? true : (ios ? false : null));
+    var perm = "Notification" in window ? Notification.permission : "non disponibile";
+    set("permesso", perm === "granted" ? "Consentito" : perm === "denied" ? "Bloccato" : perm === "default" ? "Non ancora chiesto" : perm, perm === "granted" ? true : perm === "denied" ? false : null);
+    var btn = document.getElementById("attiva-ora");
+    if (!N || !N.configurate) { set("servizio", "Non configurato", false); set("iscritto", "No", false); btn.hidden = true; return; }
+    set("servizio", "Collegamento in corso…");
+    var os = await N.osPronto(12000);
+    if (!os) { set("servizio", window.__osErrore ? "Errore: " + window.__osErrore : "Non raggiungibile", false); }
+    else set("servizio", "Collegato", true);
+    var ok = !!(os && os.User.PushSubscription.optedIn);
+    set("iscritto", ok ? "Sì ✓" : "No", ok);
+    btn.hidden = ok || perm === "denied" || (ios && !standalone);
+    var id = os && os.User.PushSubscription.id;
+    document.getElementById("codice-disp").textContent = id ? "Codice dispositivo: " + id.slice(0, 8) : "";
+  }
+  document.getElementById("attiva-ora").addEventListener("click", async function () {
+    if (window.__area30Notifiche) await window.__area30Notifiche.richiedi();
+    controlla();
+  });
+  window.addEventListener("notifiche-stato", controlla);
+  if (document.readyState === "complete") controlla(); else window.addEventListener("load", controlla);
+})();
+</script>
+{% endblock %}
