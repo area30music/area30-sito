@@ -477,6 +477,8 @@ def build():
     OUT.mkdir(parents=True)
 
     site = load_yaml(CONTENT / "sito.yml")
+    # Notifiche: attive solo con l'ID di OneSignal e sul sito definitivo (non nell'anteprima)
+    onesignal_id = str(site.get("onesignal_app_id") or "").strip() if not NOINDEX else ""
     servizi = load_yaml(CONTENT / "servizi.yml").get("servizi", [])
     galleria = load_yaml(CONTENT / "galleria.yml").get("foto", []) or []
     stampa = load_yaml(CONTENT / "rassegna-stampa.yml").get("articoli", []) or []
@@ -530,7 +532,7 @@ def build():
                       trim_blocks=True, lstrip_blocks=True)
     env.globals.update(
         url=url, abs_url=abs_url, base_path=BASE_PATH, site=site, today=today, year=today.year, css=css, noindex=NOINDEX,
-        js_v=asset_version(ASSETS / "js" / "main.js"), data_it=data_it, prossimi=prossimi,
+        js_v=asset_version(ASSETS / "js" / "main.js"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
         wa=lambda testo="": f"https://wa.me/{site['whatsapp']}" + (f"?text={quote(testo)}" if testo else ""),
     )
 
@@ -640,6 +642,10 @@ def build():
                        + datetime.now(TZ).date().isoformat().encode()).hexdigest()[:10]
     sw = (ASSETS / "js" / "sw.js").read_text(encoding="utf-8")
     sw = sw.replace("__VERSIONE__", ver).replace("__BASE__", BASE_PATH).replace("__PRECACHE__", json.dumps(precache))
+    if onesignal_id:
+        # OneSignal gestisce ricezione e clic delle notifiche dentro lo stesso service worker
+        sw = re.sub(r"/\* PUSH-PROPRIO-INIZIO[\s\S]*?PUSH-PROPRIO-FINE \*/", "", sw)
+        sw = 'importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");\n' + sw
     (OUT / "sw.js").write_text(sw, encoding="utf-8")
     shutil.copy2(ASSETS / "favicon.ico", OUT / "favicon.ico")
     (OUT / ".nojekyll").write_text("")

@@ -37,3 +37,7 @@ social:
 foto_apertura: /media/live-01.jpg
 # Video di sfondo in apertura (facoltativo): carica un MP4 breve (10-20 secondi, senza audio, max 8 MB)
 video_apertura: ""
+
+# Notifiche OneSignal: incolla qui l'"App ID" (lo trovi in OneSignal → Settings → Keys & IDs).
+# Vuoto = notifiche spente.
+onesignal_app_id: ""

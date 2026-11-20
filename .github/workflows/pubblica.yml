@@ -60,3 +60,42 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/pubblica.yml/enable" || true
+
+  notifica:
+    # Dopo la pubblicazione: avvisa con una notifica chi ha attivato le notifiche, solo per gli eventi NUOVI
+    needs: deploy
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cerca eventi aggiunti
+        id: nuovi
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then echo "files=" >> "$GITHUB_OUTPUT"; exit 0; fi
+          FILES=$(git diff --name-only --diff-filter=A "$BEFORE" "${{ github.sha }}" -- contenuti/eventi/ | tr '\n' ' ')
+          echo "Eventi aggiunti: $FILES"
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.nuovi.outputs.files != ''
+        with:
+          python-version: "3.12"
+          cache: pip
+      - if: steps.nuovi.outputs.files != ''
+        run: pip install -r requirements.txt
+      - uses: actions/cache@v4
+        if: steps.nuovi.outputs.files != ''
+        with:
+          path: .cache/img
+          key: img-${{ hashFiles('media/**') }}
+          restore-keys: img-
+      - name: Invia la notifica
+        if: steps.nuovi.outputs.files != ''
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          BASE_PATH: ${{ vars.BASE_PATH }}
+          NOINDEX: ${{ vars.NOINDEX }}
+          ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
+        run: python notifica.py ${{ steps.nuovi.outputs.files }}

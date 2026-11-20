@@ -59,6 +59,7 @@
     <symbol id="i-download" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
     <symbol id="i-share" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/></g></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
     <symbol id="i-mic" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4M8 22h8"/></g></symbol>
     <symbol id="i-light" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-2 7H9z"/><path d="M9 10 5 21M15 10l4 11M12 10v11"/></g></symbol>
     <symbol id="i-wave" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M2 12h2M6 8v8M10 4v16M14 7v10M18 10v4M22 12h0"/></symbol>
@@ -128,6 +129,7 @@
         <li><a href="{{ url('/parlano-di-noi') }}">Parlano di noi</a></li>
         <li><a href="{{ url('/contattaci') }}">Contatti</a></li>
         <li><button type="button" class="install-link" data-install hidden>{{ icon("download") }} Installa l'app</button></li>
+        <li><button type="button" class="install-link" data-notify hidden>{{ icon("bell") }} <span data-notify-label>Attiva le notifiche</span></button></li>
       </ul>
     </div>
   </div>
@@ -163,6 +165,22 @@
   <p class="lb-count" aria-live="polite"></p>
 </div>
 
+{% if onesignal_id %}
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+OneSignalDeferred.push(async function (OneSignal) {
+  await OneSignal.init({
+    appId: "{{ onesignal_id }}",
+    serviceWorkerPath: "{{ url('/sw.js')|trim('/') }}",
+    serviceWorkerParam: { scope: "{{ url('/') }}" },
+    notifyButton: { enable: false },
+    promptOptions: { slidedown: { prompts: [] } }
+  });
+  window.dispatchEvent(new CustomEvent("onesignal-pronto"));
+});
+</script>
+{% endif %}
 <script src="{{ url('/assets/js/main.js') }}?v={{ js_v }}" defer></script>
 </body>
 </html>

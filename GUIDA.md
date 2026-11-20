@@ -76,3 +76,31 @@ Poi lo comunico a GitHub, attivo l'HTTPS e tolgo il blocco per Google. Il passag
 8. Chiedi ai clienti soddisfatti una recensione e rispondi sempre.
 
 Nome, indirizzo e telefono devono essere **identici** su sito, scheda Google e social.
+
+---
+
+## 5. App e notifiche
+
+### Installare l'app
+- **iPhone / iPad (Safari):** apri il sito → pulsante **Condividi** → **Aggiungi alla schermata Home**.
+- **Android (Chrome):** pulsante **Installa l'app** sul sito, oppure menu ⋮ → **Installa app**.
+- **Mac (Safari):** menu **File** → **Aggiungi al Dock**. Con Chrome: icona di installazione nella barra degli indirizzi.
+- **Il pannello di gestione come app sul Mac:** apri https://app.pagescms.org in Safari → **File → Aggiungi al Dock**.
+
+### Attivare le notifiche con OneSignal (dopo il collegamento di area30.it)
+1. Vai su https://onesignal.com e crea un account gratuito.
+2. **New App/Website** → nome `AREA30` → scegli **Web** → **Next**.
+3. Scegli **Typical Site** e compila:
+   - **Site Name:** `AREA30`
+   - **Site URL:** `https://area30.it`
+   - **Default Icon:** carica l'icona https://area30.it/assets/icon-192.png (scaricala e caricala)
+   - **Permission Prompt:** non aggiungere nulla (sul sito c'è già il pulsante "Avvisami dei nuovi concerti").
+   - Se c'è la sezione **Advanced / Service Workers**: attiva la personalizzazione e scrivi percorso `/`, file `sw.js` (in entrambi i campi), scope `/`.
+4. **Save**. Copia l'**App ID** (una sequenza tipo `1a2b3c4d-…`) e mandamelo pure in chat: non è segreto.
+5. In OneSignal → **Settings → Keys & IDs** → **Add Key** → nome `GitHub` → copia la chiave.
+   ⚠️ **Questa chiave è segreta: non mandarla in chat.** Inseriscila tu su GitHub:
+   https://github.com/area30music/area30-sito/settings/secrets/actions → **New repository secret** →
+   Name: `ONESIGNAL_REST_API_KEY` · Secret: incolla la chiave → **Add secret**.
+
+Da quel momento, ogni volta che crei un **nuovo evento futuro** dal pannello (con l'interruttore "Invia una notifica" acceso), chi ha attivato le notifiche riceve dopo pochi minuti l'avviso con la locandina.
+Su iPhone e iPad le notifiche arrivano solo a chi ha installato l'app sulla schermata Home (iOS 16.4 o successivo).

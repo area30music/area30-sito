@@ -207,10 +207,38 @@
   const macSafari = isSafari && !isIOS && /Macintosh/.test(ua);
   const dialog = $("#install-dialog");
   let deferred = null;
+  const band = () => $$("[data-install-band]").forEach((b) => {
+    b.hidden = !$$("[data-install], [data-notify]", b).some((x) => !x.hidden);
+  });
   const showInstall = (on) => {
     $$("[data-install]").forEach((b) => { b.hidden = !on; });
-    $$("[data-install-band]").forEach((b) => { b.hidden = !on; });
+    band();
   };
+
+  /* Notifiche dei nuovi eventi (OneSignal) */
+  const notifyBtns = $$("[data-notify]");
+  const setNotify = (stato) => {
+    notifyBtns.forEach((b) => {
+      b.hidden = stato === "nascosto";
+      b.classList.toggle("attivo", stato === "attivo");
+      const l = $("[data-notify-label]", b);
+      if (l) l.textContent = stato === "attivo" ? "Notifiche attive ✓" : (b.closest(".app-band") ? "Avvisami dei nuovi concerti" : "Attiva le notifiche");
+    });
+    band();
+  };
+  if (window.OneSignalDeferred && "Notification" in window && (!isIOS || standalone)) {
+    window.OneSignalDeferred.push((OneSignal) => {
+      const aggiorna = () => setNotify(OneSignal.User.PushSubscription.optedIn ? "attivo" : (Notification.permission === "denied" ? "nascosto" : "spento"));
+      aggiorna();
+      OneSignal.User.PushSubscription.addEventListener("change", aggiorna);
+      notifyBtns.forEach((b) => b.addEventListener("click", async () => {
+        if (OneSignal.User.PushSubscription.optedIn) return;
+        if (Notification.permission === "granted") await OneSignal.User.PushSubscription.optIn();
+        else await OneSignal.Notifications.requestPermission();
+        aggiorna();
+      }));
+    });
+  }
   if (!standalone) {
     if ((isIOS && isSafari) || macSafari) showInstall(true);
     window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e; showInstall(true); });

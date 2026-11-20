@@ -96,10 +96,15 @@ content:
       - name: foto
         label: Foto della serata (facoltativo)
         type: image
-        description: Dopo l'evento puoi caricare qui le foto: compariranno nella pagina dell'evento.
+        description: "Dopo l'evento puoi caricare qui le foto: compariranno nella pagina dell'evento."
         options:
           multiple:
             max: 80
+      - name: notifica
+        label: Invia una notifica a chi ha l'app
+        type: boolean
+        default: true
+        description: Quando crei un nuovo evento futuro, chi ha attivato le notifiche riceve l'avviso con la locandina.
       - name: body
         label: Testo lungo (facoltativo)
         type: text
@@ -202,3 +207,4 @@ content:
         label: Video di sfondo in apertura (facoltativo)
         type: file
         description: MP4 breve (10-20 secondi, senza audio, massimo 8 MB). Lascia vuoto per usare solo la foto.
+      - { name: onesignal_app_id, label: "ID app OneSignal (per le notifiche)", type: string, description: "Lo trovi in OneSignal → Settings → Keys & IDs. Vuoto = notifiche spente." }

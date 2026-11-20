@@ -68,7 +68,7 @@ self.addEventListener("fetch", (e) => {
   }
 });
 
-/* Notifiche (pronte per quando attiveremo l'invio) */
+/* PUSH-PROPRIO-INIZIO – notifiche senza OneSignal (rimosso automaticamente se OneSignal è attivo) */
 self.addEventListener("push", (e) => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch (_) { d = { body: e.data && e.data.text() }; }
@@ -90,3 +90,4 @@ self.addEventListener("notificationclick", (e) => {
     return self.clients.openWindow(url);
   }));
 });
+/* PUSH-PROPRIO-FINE */
