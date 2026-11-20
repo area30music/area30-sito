@@ -359,7 +359,11 @@ def carica_storico(app_id: str) -> list[dict]:
         print(f"  ! storico notifiche non disponibile: {ex}", file=sys.stderr)
         return []
     out = []
+    print(f"  OneSignal: total_count={dati.get('total_count')} ricevute={len(dati.get('notifications', []))}")
     for n in dati.get("notifications", []):
+        print("   -", str(n.get("id"))[:8], "canceled=", n.get("canceled"), "send_after=", n.get("send_after"),
+              "queued_at=", n.get("queued_at"), "completed_at=", n.get("completed_at"),
+              "successful=", n.get("successful"), "titolo=", (n.get("headings") or {}).get("en", "")[:30])
         if n.get("canceled"):
             continue
         quando = n.get("send_after") or n.get("queued_at") or n.get("completed_at")
