@@ -38,3 +38,9 @@ Dati per Google (Event), sitemap, llms.txt, calendario .ics e anteprime per What
 - Non cambiare nulla sul dominio senza conferma esplicita.
 - Ogni immagine deve avere un testo alternativo descrittivo.
 - Tutti i link in https.
+
+## Web app e notifiche
+- Web app: `site.webmanifest` e `sw.js` sono generati da `build.py` (sorgente del service worker: `assets/js/sw.js`).
+- Notifiche OneSignal: `onesignal_app_id` in `contenuti/sito.yml` + segreto GitHub `ONESIGNAL_REST_API_KEY`. Funzionano solo sul sito definitivo (NOINDEX vuoto).
+- Il job `notifica` del workflow invia la notifica (`notifica.py`) solo per i file evento **aggiunti** nel push con data futura; `notifica: false` nell'evento la evita. Quando aggiungi un evento a mano, usa un commit che crea un file nuovo.
+- Mai chiedere la chiave REST in chat: la inserisce l'utente nei segreti di GitHub.
