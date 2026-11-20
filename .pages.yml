@@ -1,0 +1,204 @@
+# Configurazione del pannello di gestione Pages CMS (https://app.pagescms.org)
+# Ogni salvataggio crea una modifica sul repository GitHub e il sito si ripubblica da solo in pochi minuti.
+
+media:
+  input: media
+  output: /media
+  rename: safe
+  extensions: [jpg, jpeg, png, webp, mp4]
+
+settings:
+  content: true
+  commit:
+    templates:
+      create: "Nuovo: {path} (pannello)"
+      update: "Modifica: {path} (pannello)"
+      delete: "Eliminato: {path} (pannello)"
+
+content:
+  - name: eventi
+    label: Eventi
+    type: collection
+    path: contenuti/eventi
+    format: yaml-frontmatter
+    filename:
+      template: "{data}-{titolo}.md"
+      field: false
+    view:
+      primary: titolo
+      fields: [titolo, data, luogo]
+      sort: [data, titolo]
+      search: [titolo, rassegna, luogo]
+      default:
+        sort: data
+        order: desc
+    fields:
+      - name: titolo
+        label: Nome dell'evento
+        type: string
+        required: true
+        description: "Esempio: ABSOLUTE 5 in Concerto"
+      - name: rassegna
+        label: Rassegna (facoltativo)
+        type: string
+        description: "Esempio: Controtempo Winter Edition 2026"
+      - name: data
+        label: Data
+        type: date
+        required: true
+        default: ""
+        options:
+          format: yyyy-MM-dd
+        description: Quando la data è passata, l'evento si sposta da solo in "Eventi passati".
+      - name: ora
+        label: Ora di inizio
+        type: string
+        description: "Scrivi l'ora così: 21:00"
+        pattern:
+          regex: "^$|^([01]?[0-9]|2[0-3])[:.][0-5][0-9]$"
+          message: "Scrivi l'ora nel formato 21:00"
+      - name: apertura
+        label: Apertura porte (facoltativo)
+        type: string
+        description: "Esempio: 20:30"
+        pattern:
+          regex: "^$|^([01]?[0-9]|2[0-3])[:.][0-5][0-9]$"
+          message: "Scrivi l'ora nel formato 20:30"
+      - name: luogo
+        label: Luogo
+        type: string
+        default: Teatro Bongioanni
+      - name: indirizzo
+        label: Indirizzo
+        type: string
+        default: Viale Scuole, 13
+      - name: citta
+        label: Città
+        type: string
+        default: Sommariva del Bosco
+      - name: descrizione
+        label: Descrizione breve
+        type: text
+        options:
+          maxlength: 400
+        description: Una o due frasi. Compare sulla scheda dell'evento e su Google.
+      - name: biglietti
+        label: Link dei biglietti (ticket.it)
+        type: string
+        description: "Incolla l'indirizzo completo della pagina dei biglietti, che inizia con https://"
+        pattern:
+          regex: "^$|^https://.+"
+          message: "Il link deve iniziare con https://"
+      - name: locandina
+        label: Locandina
+        type: image
+        description: Carica la locandina (JPG o PNG). Il sito la ottimizza da solo.
+      - name: foto
+        label: Foto della serata (facoltativo)
+        type: image
+        description: Dopo l'evento puoi caricare qui le foto: compariranno nella pagina dell'evento.
+        options:
+          multiple:
+            max: 80
+      - name: body
+        label: Testo lungo (facoltativo)
+        type: text
+        description: Programma, ospiti, informazioni aggiuntive.
+
+  - name: galleria
+    label: Galleria foto "Dal vivo"
+    type: file
+    path: contenuti/galleria.yml
+    format: yaml
+    fields:
+      - name: foto
+        label: Foto
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{descrizione}"
+        fields:
+          - name: immagine
+            label: Foto
+            type: image
+            required: true
+          - name: descrizione
+            label: Descrizione (per Google e per chi non vede)
+            type: string
+            required: true
+            description: "Descrivi cosa si vede, ad esempio: Cantante sul palco sotto le luci blu"
+
+  - name: rassegna
+    label: Parlano di noi
+    type: file
+    path: contenuti/rassegna-stampa.yml
+    format: yaml
+    fields:
+      - name: articoli
+        label: Articoli
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{titolo}"
+        fields:
+          - { name: titolo, label: Titolo, type: string, required: true }
+          - { name: testata, label: Giornale o sito, type: string }
+          - { name: autore, label: Autore, type: string }
+          - name: data
+            label: Data
+            type: date
+            options: { format: yyyy-MM-dd }
+          - { name: estratto, label: Riassunto o prime righe, type: text }
+          - { name: immagine, label: Foto, type: image }
+          - name: link
+            label: Link all'articolo originale
+            type: string
+            pattern: { regex: "^$|^https?://.+", message: "Il link deve iniziare con https://" }
+
+  - name: servizi
+    label: I nostri servizi
+    type: file
+    path: contenuti/servizi.yml
+    format: yaml
+    fields:
+      - name: servizi
+        label: Servizi
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{titolo}"
+        fields:
+          - { name: titolo, label: Titolo, type: string, required: true }
+          - { name: id, label: Codice per il link (non cambiarlo), type: string, readonly: true }
+          - { name: immagine, label: Foto principale, type: image }
+          - { name: alt, label: Descrizione della foto, type: string }
+          - { name: immagine2, label: Seconda foto (facoltativa), type: image }
+          - { name: alt2, label: Descrizione della seconda foto, type: string }
+          - { name: testo, label: Paragrafi, type: text, list: true }
+
+  - name: sito
+    label: Impostazioni del sito
+    type: file
+    path: contenuti/sito.yml
+    format: yaml
+    fields:
+      - { name: telefono, label: Telefono (come appare sul sito), type: string }
+      - { name: telefono_link, label: "Telefono per la chiamata (formato +390172560087)", type: string }
+      - { name: whatsapp, label: "Numero WhatsApp (solo cifre, con 39 davanti)", type: string, pattern: { regex: "^[0-9]{8,15}$", message: "Solo cifre, ad esempio 393331519599" } }
+      - { name: email, label: Email, type: string }
+      - name: social
+        label: Social
+        type: object
+        fields:
+          - { name: facebook, label: Facebook, type: string }
+          - { name: instagram, label: Instagram, type: string }
+          - { name: youtube, label: YouTube, type: string }
+          - { name: tiktok, label: TikTok, type: string }
+      - { name: foto_apertura, label: Foto grande di apertura (Home), type: image }
+      - name: video_apertura
+        label: Video di sfondo in apertura (facoltativo)
+        type: file
+        description: MP4 breve (10-20 secondi, senza audio, massimo 8 MB). Lascia vuoto per usare solo la foto.

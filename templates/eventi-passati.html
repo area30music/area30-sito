@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macro.html" import picture, icon, page_hero, poster_tile %}
+{% block content %}
+{{ page_hero("Eventi passati", "Un po’ della nostra storia: le serate di Controtempo e gli spettacoli che abbiamo portato sul palco.", "La nostra storia") }}
+<section class="section" aria-label="Locandine degli eventi passati">
+  <div class="wrap">
+    {% set anni = passati|groupby("data.year")|reverse|list %}
+    {% for anno, lista in anni %}
+    <div class="year-block">
+      <h2 class="year reveal"><span>{{ anno }}</span></h2>
+      <div class="poster-grid">
+        {% for e in lista|sort(attribute="data", reverse=true) %}{{ poster_tile(e) }}{% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% if galleria %}
+<section class="section live" aria-labelledby="gal-h">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow reveal">Galleria</p>
+      <h2 class="display reveal" id="gal-h">Foto dal vivo</h2>
+      <p class="hint reveal">Tocca una foto per aprirla a tutto schermo e sfogliare.</p>
+    </div>
+    <div class="masonry" data-gallery="galleria">
+      {% for g in galleria %}
+      <button type="button" class="masonry-item reveal" data-full="{{ g.largest }}" data-caption="{{ g.alt }}" aria-label="Apri foto: {{ g.alt }}">
+        {{ picture(g, "(min-width: 1100px) 33vw, (min-width: 600px) 50vw, 100vw") }}
+        <span class="zoom">{{ icon("expand") }}</span>
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

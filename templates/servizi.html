@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "_macro.html" import picture, icon, page_hero %}
+{% block content %}
+{{ page_hero("I nostri servizi", "Service audio e luci, studio di registrazione e sala prove a Sommariva del Bosco, per eventi in tutto il Piemonte.", "Cosa facciamo") }}
+<div class="serv-index wrap reveal">
+  {% for s in servizi %}<a href="#{{ s.id }}">{{ s.titolo }}</a>{% endfor %}
+</div>
+{% for s in servizi %}
+<section class="section serv-detail{% if loop.index is even %} serv-detail--rev{% endif %}" id="{{ s.id }}" aria-labelledby="{{ s.id }}-h">
+  <div class="wrap serv-detail-grid">
+    <div class="serv-detail-media reveal" data-parallax="-0.06">
+      {{ picture(s.img, "(min-width: 900px) 50vw, 92vw") }}
+      {% if s.img2 %}<div class="serv-detail-media2">{{ picture(s.img2, "(min-width: 900px) 22vw, 45vw") }}</div>{% endif %}
+    </div>
+    <div class="serv-detail-text">
+      <p class="eyebrow reveal">0{{ loop.index }}</p>
+      <h2 class="display reveal" id="{{ s.id }}-h">{{ s.titolo }}</h2>
+      {% for p in s.testo %}<p class="reveal{% if loop.first %} lead{% endif %}">{{ p }}</p>{% endfor %}
+      <div class="reveal btn-row">
+        <a class="btn btn-gold" href="{{ wa('Ciao AREA30, vorrei informazioni su: ' ~ s.titolo) }}" target="_blank" rel="noopener">{{ icon("whatsapp") }}<span>Chiedi informazioni</span></a>
+        <a class="btn btn-ghost" href="tel:{{ site.telefono_link }}">{{ icon("phone") }}<span>Chiama</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endfor %}
+<section class="section cta">
+  <div class="beams beams--soft" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap cta-inner">
+    <h2 class="display reveal">Dove lavoriamo</h2>
+    <p class="lead reveal">Siamo a Sommariva del Bosco e seguiamo eventi in tutta la provincia di Cuneo, nel Roero, nelle Langhe e in Piemonte: dal piccolo club o pub al festival musicale, fino alle grandi manifestazioni di piazza.</p>
+    <div class="cta-actions reveal"><a class="btn btn-gold" href="{{ url('/contattaci') }}"><span>Contattaci</span>{{ icon("arrow") }}</a></div>
+  </div>
+</section>
+{% endblock %}

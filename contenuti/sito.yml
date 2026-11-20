@@ -1,0 +1,39 @@
+# Dati generali del sito AREA30.
+# Modificabili anche dal pannello di gestione (Pages CMS → "Impostazioni sito").
+
+nome: AREA30
+nome_esteso: AREA30 Event and Communication
+ragione_sociale: Studio Grafico Associato snc
+slogan: Service audio e luci, eventi live, studio di registrazione e sala prove
+descrizione: >-
+  AREA30 è un service audio e luci di Sommariva del Bosco (CN): impianti, luci,
+  strutture ed effetti speciali per concerti, festival ed eventi in Piemonte,
+  oltre a studio di registrazione e sala prove. Organizziamo anche la rassegna
+  musicale Controtempo.
+
+indirizzo:
+  via: Via Mario Groppo, 4
+  cap: "12048"
+  citta: Sommariva del Bosco
+  provincia: CN
+  regione: Piemonte
+  nazione: IT
+  # Coordinate approssimative di Sommariva del Bosco: da verificare con la posizione esatta della sede
+  lat: 44.7697
+  lng: 7.7836
+
+telefono: "0172 56 00 87"
+telefono_link: "+390172560087"
+whatsapp: "393331519599"
+email: info@area30.it
+
+social:
+  facebook: https://it-it.facebook.com/AREA30EventandCommunication/
+  instagram: https://www.instagram.com/area30_eventandcommunication/
+  youtube: https://www.youtube.com/channel/UCt2g4DXX3QN6l42PU4lfYuA
+  tiktok: https://www.tiktok.com/@area30_event
+
+# Foto grande di apertura in Home
+foto_apertura: /media/live-01.jpg
+# Video di sfondo in apertura (facoltativo): carica un MP4 breve (10-20 secondi, senza audio, max 8 MB)
+video_apertura: ""

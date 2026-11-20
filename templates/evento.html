@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "_macro.html" import picture, icon, cal_buttons %}
+{% block bodyclass %}is-event{% endblock %}
+{% block content %}
+<article class="event-page">
+  <div class="event-bg" aria-hidden="true">{% if e.img %}<img src="{{ e.img.src }}" alt="" loading="eager">{% endif %}</div>
+  <div class="beams beams--soft" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap event-grid">
+    <div class="event-poster reveal">
+      {% if e.img %}<button type="button" class="poster-zoom" data-full="{{ e.img.largest }}" data-caption="{{ e.img.alt }}" aria-label="Ingrandisci la locandina">{{ picture(e.img, "(min-width: 900px) 40vw, 90vw", eager=true) }}<span class="zoom">{{ icon("expand") }}</span></button>{% endif %}
+    </div>
+    <div class="event-info">
+      <nav class="crumbs reveal" aria-label="Percorso"><a href="{{ url('/') }}">Home</a> / {% if e.passato %}<a href="{{ url('/eventi-passati') }}">Eventi passati</a>{% else %}<a href="{{ url('/#eventi') }}">Prossimi eventi</a>{% endif %}</nav>
+      {% if e.rassegna %}<p class="eyebrow reveal">{{ e.rassegna }}</p>{% endif %}
+      <h1 class="display reveal">{{ e.titolo }}</h1>
+      {% if e.descrizione %}<p class="lead reveal">{{ e.descrizione }}</p>{% endif %}
+      <ul class="ev-meta ev-meta--big reveal">
+        <li>{{ icon("calendar") }}<span><time datetime="{{ e.iso }}">{{ e.data_lunga }}{% if e.ora %} · ore {{ e.ora_it }}{% endif %}</time>{% if e.apertura %}<br><small>Apertura porte ore {{ e.apertura|replace(":", ".") }}</small>{% endif %}</span></li>
+        {% if e.luogo or e.indirizzo %}<li>{{ icon("pin") }}<a href="https://www.google.com/maps/search/?api=1&query={{ e.luogo_completo|urlencode }}" target="_blank" rel="noopener">{{ e.luogo }}{% if e.indirizzo %}<br><small>{{ e.indirizzo }} – {{ e.citta }}</small>{% endif %}</a></li>{% endif %}
+      </ul>
+      {% if not e.passato %}
+      <div class="cd cd--big reveal" data-countdown="{{ e.inizio.isoformat() }}" aria-hidden="true"><span><b data-cd="d">–</b><small>giorni</small></span><span><b data-cd="h">–</b><small>ore</small></span><span><b data-cd="m">–</b><small>min</small></span><span><b data-cd="s">–</b><small>sec</small></span></div>
+      <div class="ev-actions reveal">
+        {% if e.biglietti %}<a class="btn btn-gold btn-lg" href="{{ e.biglietti }}" target="_blank" rel="noopener">{{ icon("ticket") }}<span>Acquista qui</span></a>{% endif %}
+        {{ cal_buttons(e) }}
+      </div>
+      {% else %}
+      <p class="past-note reveal">Questo evento si è già svolto. <a href="{{ url('/#eventi') }}">Scopri i prossimi eventi →</a></p>
+      {% endif %}
+      {% if e.testo %}<div class="prose reveal"><p>{{ e.testo|e|replace("\n\n", "</p><p>"|safe)|replace("\n", "<br>"|safe) }}</p></div>{% endif %}
+      <div class="share reveal">
+        <span>Condividi:</span>
+        <a href="https://wa.me/?text={{ (e.titolo ~ ' – ' ~ canonical)|urlencode }}" target="_blank" rel="noopener" aria-label="Condividi su WhatsApp">{{ icon("whatsapp") }}</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ canonical|urlencode }}" target="_blank" rel="noopener" aria-label="Condividi su Facebook">{{ icon("facebook") }}</a>
+        <button type="button" class="share-native" data-title="{{ e.titolo }}" data-url="{{ canonical }}" hidden>Altro…</button>
+      </div>
+    </div>
+  </div>
+  {% if e.foto_img %}
+  <section class="section live" aria-labelledby="foto-h">
+    <div class="wrap">
+      <h2 class="display" id="foto-h">Le foto della serata</h2>
+      <div class="masonry" data-gallery="evento">
+        {% for g in e.foto_img %}
+        <button type="button" class="masonry-item reveal" data-full="{{ g.largest }}" data-caption="{{ g.alt }}" aria-label="Apri foto {{ loop.index }}">{{ picture(g, "(min-width: 1100px) 33vw, (min-width: 600px) 50vw, 100vw") }}<span class="zoom">{{ icon("expand") }}</span></button>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</article>
+{% endblock %}

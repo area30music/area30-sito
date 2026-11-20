@@ -1,0 +1,27 @@
+# Testi della pagina "I nostri servizi" (presi dal sito attuale).
+servizi:
+  - titolo: Service audio e luci
+    id: service-audio-luci
+    immagine: /media/live-10.jpg
+    alt: Palco all'aperto illuminato dai fari di AREA30 durante un concerto
+    testo:
+      - Per il tuo spettacolo forniamo impianti e service audio luci, ma anche strutture ed effetti speciali.
+      - AREA30 dispone di un magazzino in continuo aggiornamento, con articoli selezionati fra i migliori brand leader del settore.
+      - Diamo spazio alle idee del cliente gestendo l’evento in tutti i suoi dettagli.
+      - Realizziamo diverse situazioni, dal piccolo club o pub al festival musicale e alle grandi manifestazioni di piazza.
+  - titolo: Studio di registrazione
+    id: studio-di-registrazione
+    immagine: /media/studio-registrazione.jpg
+    alt: Sala regia dello studio di registrazione AREA30 con mixer, monitor e tastiera
+    testo:
+      - AREA30 dispone di uno studio di registrazione analogico e digitale che offre soluzioni professionali con costi alla portata di tutte le tasche.
+      - Il nostro studio è stato progettato per registrare e produrre musica in un ambiente accogliente e con una buona acustica, con strumentazione professionale di qualità, per dar vita ai sogni dei nostri clienti.
+  - titolo: Sala prove e sala di ripresa
+    id: sala-prove
+    immagine: /media/sala-prove.jpg
+    alt: Sala prove AREA30 con pianoforte a coda, batteria elettronica e pannelli acustici
+    immagine2: /media/sala-di-ripresa.jpg
+    alt2: Sala di ripresa insonorizzata con microfono e strumenti
+    testo:
+      - Nella nostra struttura c’è una sala prove adiacente alla sala regia.
+      - La sala prove è provvista di un pianoforte 1/4 di coda, una batteria elettronica e una Yamaha DX7.

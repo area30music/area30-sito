@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_macro.html" import icon, page_hero %}
+{% block content %}
+{{ page_hero("Contatti", "Per service audio e luci, eventi, studio di registrazione e sala prove: scrivici o chiamaci, ti rispondiamo volentieri.", "Parliamone") }}
+{% set a = site.indirizzo %}
+{% set maps_q = ('AREA30 ' ~ a.via ~ ' ' ~ a.cap ~ ' ' ~ a.citta)|urlencode %}
+<section class="section">
+  <div class="wrap contact-grid">
+    <a class="contact-card reveal" href="{{ wa('Ciao AREA30, vorrei informazioni') }}" target="_blank" rel="noopener">
+      <span class="contact-ico">{{ icon("whatsapp") }}</span><h2>WhatsApp</h2><p>Scrivici in chat</p><span class="link-arrow">Apri WhatsApp {{ icon("arrow") }}</span>
+    </a>
+    <a class="contact-card reveal" href="tel:{{ site.telefono_link }}" style="--d:80ms">
+      <span class="contact-ico">{{ icon("phone") }}</span><h2>Telefono</h2><p>{{ site.telefono }}</p><span class="link-arrow">Chiama {{ icon("arrow") }}</span>
+    </a>
+    <a class="contact-card reveal" href="mailto:{{ site.email }}" style="--d:160ms">
+      <span class="contact-ico">{{ icon("mail") }}</span><h2>Email</h2><p>{{ site.email }}</p><span class="link-arrow">Scrivi una email {{ icon("arrow") }}</span>
+    </a>
+    <a class="contact-card reveal" href="https://www.google.com/maps/search/?api=1&query={{ maps_q }}" target="_blank" rel="noopener" style="--d:240ms">
+      <span class="contact-ico">{{ icon("pin") }}</span><h2>Sede</h2><p>{{ a.via }}<br>{{ a.cap }} {{ a.citta }} ({{ a.provincia }})</p><span class="link-arrow">Indicazioni {{ icon("arrow") }}</span>
+    </a>
+  </div>
+  <div class="wrap">
+    <div class="map reveal" data-map="https://www.google.com/maps?q={{ maps_q }}&output=embed">
+      <div class="map-placeholder">
+        {{ icon("pin", "ico ico-xl") }}
+        <p><strong>AREA30</strong><br>{{ a.via }}, {{ a.cap }} {{ a.citta }} ({{ a.provincia }})</p>
+        <button type="button" class="btn btn-gold map-load">Mostra la mappa</button>
+        <small>La mappa è fornita da Google e viene caricata solo se la apri.</small>
+      </div>
+    </div>
+  </div>
+  <div class="wrap social-band reveal">
+    <h2 class="display">Seguici sui social</h2>
+    <div class="social social--big">
+      {% for k, v in site.social.items() if v %}<a href="{{ v }}" target="_blank" rel="noopener" aria-label="AREA30 su {{ {'facebook':'Facebook','instagram':'Instagram','youtube':'YouTube','tiktok':'TikTok'}.get(k, k|capitalize) }}">{{ icon(k) }}<span>{{ {'facebook':'Facebook','instagram':'Instagram','youtube':'YouTube','tiktok':'TikTok'}.get(k, k|capitalize) }}</span></a>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

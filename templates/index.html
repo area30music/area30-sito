@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% from "_macro.html" import picture, icon, event_card, poster_tile %}
+{% block bodyclass %}is-home{% endblock %}
+{% block preload %}{% if hero %}<link rel="preload" as="image" type="image/webp" imagesrcset="{{ hero.srcset }}" imagesizes="100vw" fetchpriority="high">{% endif %}{% endblock %}
+{% block content %}
+{% set next = prossimi[0] if prossimi else none %}
+
+<section class="hero" aria-label="Benvenuti in AREA30">
+  <div class="hero-media" data-parallax="0.25">
+    {{ picture(hero, "100vw", "hero-img", eager=true) }}
+    {% if video %}<video class="hero-video" src="{{ video }}" muted loop playsinline autoplay preload="none" aria-hidden="true"></video>{% endif %}
+  </div>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="beams" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="haze" aria-hidden="true"></div>
+  <div class="hero-content wrap">
+    <h1 class="hero-title">
+      <span class="sr-only">AREA30 – Service audio e luci ed eventi live a Sommariva del Bosco</span>
+      <img class="hero-logo" src="{{ url('/assets/logo-area30.png') }}" alt="" width="740" height="96">
+    </h1>
+    <p class="hero-tag"><span>Service audio e luci</span><span>Eventi live</span><span>Studio di registrazione</span><span>Sala prove</span></p>
+    <p class="hero-place">Sommariva del Bosco · Roero · Piemonte</p>
+    {% if next %}
+    <a class="hero-next" href="#eventi" data-countdown="{{ next.inizio.isoformat() }}">
+      <span class="hero-next-label">Prossimo evento</span>
+      <strong>{{ next.titolo }}</strong>
+      <span class="hero-next-when">{{ next.data_lunga }}{% if next.ora %} · ore {{ next.ora_it }}{% endif %}</span>
+      <span class="cd" aria-hidden="true"><span><b data-cd="d">–</b><small>giorni</small></span><span><b data-cd="h">–</b><small>ore</small></span><span><b data-cd="m">–</b><small>min</small></span><span><b data-cd="s">–</b><small>sec</small></span></span>
+    </a>
+    {% endif %}
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="#eventi">{{ icon("ticket") }}<span>Prossimi eventi</span></a>
+      <a class="btn btn-ghost" href="{{ url('/i-nostri-servizi') }}"><span>I nostri servizi</span>{{ icon("arrow") }}</a>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#eventi" aria-label="Scorri verso il basso"><span></span></a>
+</section>
+
+<section class="section events" id="eventi" aria-labelledby="eventi-h">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow reveal">In calendario</p>
+      <h2 class="display reveal" id="eventi-h">I nostri prossimi eventi</h2>
+    </div>
+    {% if prossimi %}
+    <div class="ev-list">
+      {% for e in prossimi %}{{ event_card(e, big=(loop.first or prossimi|length <= 2)) }}{% endfor %}
+    </div>
+    {% endif %}
+    <div class="ev-empty reveal"{% if prossimi %} hidden{% endif %}>
+      <p>Nuovi eventi in arrivo. Seguici sui social per non perdere nessun annuncio!</p>
+      <div class="social social--big">{% for k, v in site.social.items() if v %}<a href="{{ v }}" target="_blank" rel="noopener" aria-label="AREA30 su {{ {'facebook':'Facebook','instagram':'Instagram','youtube':'YouTube','tiktok':'TikTok'}.get(k, k|capitalize) }}">{{ icon(k) }}</a>{% endfor %}</div>
+    </div>
+  </div>
+</section>
+
+<section class="section intro" aria-labelledby="intro-h">
+  <div class="wrap intro-grid">
+    <div class="intro-text">
+      <p class="eyebrow reveal">Benvenuti nel nostro mondo</p>
+      <h2 class="display reveal" id="intro-h">Diamo luce e suono <em>alle tue idee</em></h2>
+      <p class="lead reveal">Dal piccolo club al festival in piazza: AREA30 porta sul palco impianti audio, luci, strutture ed effetti speciali, e segue l’evento in tutti i suoi dettagli.</p>
+      <p class="reveal">A Sommariva del Bosco, nel cuore del Roero, abbiamo anche uno studio di registrazione e una sala prove. E ogni anno organizziamo <strong>Controtempo</strong>, la rassegna che porta grandi artisti al Teatro Bongioanni e in piazza.</p>
+      <a class="link-arrow reveal" href="{{ url('/i-nostri-servizi') }}">Scopri tutti i nostri servizi {{ icon("arrow") }}</a>
+    </div>
+    <div class="intro-visual reveal" data-parallax="-0.08">
+      {{ picture(servizi[0].img, "(min-width: 900px) 45vw, 92vw", "intro-img") }}
+      <div class="intro-badge"><span>Controtempo</span><b>dal 2016</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="section services" aria-labelledby="serv-h">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow reveal">Cosa facciamo</p>
+      <h2 class="display reveal" id="serv-h">I nostri servizi</h2>
+    </div>
+    <div class="serv-grid">
+      {% for s in servizi %}
+      <a class="serv-card reveal" href="{{ url('/i-nostri-servizi#' ~ s.id) }}" style="--d:{{ loop.index0 * 90 }}ms">
+        <div class="serv-img">{{ picture(s.img, "(min-width: 900px) 32vw, 92vw") }}</div>
+        <div class="serv-body">
+          <span class="serv-ico">{{ icon(["light","mic","wave"][loop.index0 % 3]) }}</span>
+          <h3>{{ s.titolo }}</h3>
+          <p>{{ s.testo[0] }}</p>
+          <span class="link-arrow">Scopri di più {{ icon("arrow") }}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if galleria %}
+<section class="section live" aria-labelledby="live-h">
+  <div class="wrap section-head">
+    <p class="eyebrow reveal">Dal vivo</p>
+    <h2 class="display reveal" id="live-h">L’emozione del palco</h2>
+    <p class="hint reveal">Tocca una foto per aprirla a tutto schermo.</p>
+  </div>
+  <div class="strip" data-gallery="home">
+    {% for g in galleria %}
+    <button type="button" class="strip-item" data-full="{{ g.largest }}" data-caption="{{ g.alt }}" aria-label="Apri foto: {{ g.alt }}">
+      {{ picture(g, "(min-width: 900px) 34vw, 80vw") }}
+    </button>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if passati %}
+<section class="section past" aria-labelledby="past-h">
+  <div class="wrap">
+    <div class="section-head section-head--row">
+      <div>
+        <p class="eyebrow reveal">La nostra storia</p>
+        <h2 class="display reveal" id="past-h">Eventi passati</h2>
+      </div>
+      <a class="btn btn-ghost reveal" href="{{ url('/eventi-passati') }}"><span>Vedi tutti</span>{{ icon("arrow") }}</a>
+    </div>
+  </div>
+  <div class="marquee" aria-label="Locandine degli eventi passati">
+    <div class="marquee-track">
+      {% for e in passati %}{{ poster_tile(e) }}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if stampa %}
+<section class="section press" aria-labelledby="press-h">
+  <div class="wrap">
+    <div class="section-head section-head--row">
+      <div>
+        <p class="eyebrow reveal">Rassegna stampa</p>
+        <h2 class="display reveal" id="press-h">Parlano di noi</h2>
+      </div>
+      <a class="btn btn-ghost reveal" href="{{ url('/parlano-di-noi') }}"><span>Tutti gli articoli</span>{{ icon("arrow") }}</a>
+    </div>
+    <div class="press-grid">
+      {% for a in stampa %}
+      <article class="press-card reveal" style="--d:{{ loop.index0 * 90 }}ms">
+        <div class="press-img">{{ picture(a.img, "(min-width: 900px) 30vw, 92vw") }}</div>
+        <div class="press-body">
+          <p class="press-meta">{{ a.data_it }}{% if a.autore %} · {{ a.autore }}{% endif %}</p>
+          <h3>{% if a.link %}<a href="{{ a.link }}" target="_blank" rel="noopener">{{ a.titolo }}</a>{% else %}{{ a.titolo }}{% endif %}</h3>
+          {% if a.estratto %}<p>{{ a.estratto }}</p>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section cta" aria-labelledby="cta-h">
+  <div class="beams beams--soft" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap cta-inner">
+    <p class="eyebrow reveal">Hai un evento in mente?</p>
+    <h2 class="display reveal" id="cta-h">Parliamone <em>insieme</em></h2>
+    <p class="lead reveal">Concerti, feste, festival, eventi aziendali, registrazioni: raccontaci la tua idea.</p>
+    <div class="cta-actions reveal">
+      <a class="btn btn-gold" href="{{ wa('Ciao AREA30, vorrei informazioni per un evento') }}" target="_blank" rel="noopener">{{ icon("whatsapp") }}<span>Scrivici su WhatsApp</span></a>
+      <a class="btn btn-ghost" href="tel:{{ site.telefono_link }}">{{ icon("phone") }}<span>{{ site.telefono }}</span></a>
+      <a class="btn btn-ghost" href="mailto:{{ site.email }}">{{ icon("mail") }}<span>{{ site.email }}</span></a>
+    </div>
+  </div>
+</section>
+{% endblock %}

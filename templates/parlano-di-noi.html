@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_macro.html" import picture, icon, page_hero %}
+{% block content %}
+{{ page_hero("Parlano di noi", "Scopri le novità e leggi le ultime notizie su AREA30 e sul festival Controtempo.", "Rassegna stampa") }}
+<section class="section">
+  <div class="wrap press-list">
+    {% for a in stampa %}
+    <article class="press-row reveal">
+      <div class="press-img">{{ picture(a.img, "(min-width: 900px) 38vw, 92vw") }}</div>
+      <div class="press-body">
+        <p class="press-meta"><time datetime="{{ a.data }}">{{ a.data_it }}</time>{% if a.autore %} · {{ a.autore }}{% endif %}{% if a.testata %} · <em>{{ a.testata }}</em>{% endif %}</p>
+        <h2>{{ a.titolo }}</h2>
+        {% if a.estratto %}<p>{{ a.estratto }}</p>{% endif %}
+        {% if a.link %}<a class="link-arrow" href="{{ a.link }}" target="_blank" rel="noopener">Leggi l’articolo {{ icon("arrow") }}</a>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

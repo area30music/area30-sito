@@ -1,0 +1,38 @@
+# Articoli della pagina "Parlano di noi".
+# Per ogni articolo puoi aggiungere "link" con l'indirizzo dell'articolo originale sul giornale.
+articoli:
+  - titolo: "Controtempo Festival – Summer Edition 2026: a Sommariva del Bosco le grandi icone della musica dance anni '80 e '90"
+    autore: Silvano Bertaina
+    testata: ""
+    data: "2026-06-30"
+    estratto: ""
+    immagine: /media/live-13.jpg
+    link: ""
+  - titolo: Controtempo Summer Edition 2025
+    autore: Valter Ribet
+    testata: ""
+    data: "2025-09-10"
+    estratto: "A Sommariva del Bosco il 5 settembre 2025 al Controtempo Summer Festival Johnson Righeira, Viola Valentino, Vivian dei Da Blitz e Den Harrow…"
+    immagine: /media/live-12.jpg
+    link: ""
+  - titolo: "Controtempo Festival, tornano gli anni ’80"
+    autore: Salvatore Franzè
+    testata: ""
+    data: "2025-09-06"
+    estratto: "Area30 ripropone a Sommariva del Bosco (CN) il festival dedicato agli Ottanta. Slittato da giugno a settembre a causa del maltempo, il Controtempo Festival…"
+    immagine: /media/live-14.jpg
+    link: ""
+  - titolo: "A Sommariva Bosco è l’ora del Controtempo summer festival"
+    autore: Cecilia Flocco
+    testata: ""
+    data: "2025-09-04"
+    estratto: "Dopo il rinvio causato dal maltempo del 21 giugno, è tutto pronto per il ritorno del Controtempo summer festival, appuntamento musicale…"
+    immagine: /media/live-02.jpg
+    link: ""
+  - titolo: "Controtempo Summer Edition 2025, il programma"
+    autore: Salvatore Franzè
+    testata: ""
+    data: "2025-06-11"
+    estratto: "Controtempo, il festival che fa ballare prende vita nella sua versione Summer Edition: l’evento musicale dedicato alla disco dance degli anni d’oro…"
+    immagine: /media/live-controtempo-summer-2025.jpg
+    link: ""

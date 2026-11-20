@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "_macro.html" import icon %}
+{% block content %}
+<section class="page-hero page-hero--full">
+  <div class="beams" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap">
+    <p class="eyebrow">Errore 404</p>
+    <h1 class="display">Qui il palco è vuoto</h1>
+    <p class="lead">La pagina che cerchi non esiste o è stata spostata.</p>
+    <div class="btn-row"><a class="btn btn-gold" href="{{ url('/') }}"><span>Torna alla Home</span>{{ icon("arrow") }}</a><a class="btn btn-ghost" href="{{ url('/#eventi') }}"><span>Prossimi eventi</span></a></div>
+  </div>
+</section>
+{% endblock %}

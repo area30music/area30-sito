@@ -1,0 +1,7 @@
+_site/
+.cache/
+__pycache__/
+.DS_Store
+.venv/
+.claude/
+Nuovo sito AREA30 – istruzioni per Claude Code.md

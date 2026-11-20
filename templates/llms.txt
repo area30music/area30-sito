@@ -1,0 +1,40 @@
+# AREA30
+
+> {{ site.descrizione }}
+
+AREA30 ({{ site.nome_esteso }}, {{ site.ragione_sociale }}) ha sede in {{ site.indirizzo.via }}, {{ site.indirizzo.cap }} {{ site.indirizzo.citta }} ({{ site.indirizzo.provincia }}), {{ site.indirizzo.regione }}, Italia. Opera in provincia di Cuneo, nel Roero, nelle Langhe e in tutto il Piemonte.
+
+- Telefono: {{ site.telefono }}
+- WhatsApp: https://wa.me/{{ site.whatsapp }}
+- Email: {{ site.email }}
+- Sito: {{ abs_url('/') }}
+
+## Servizi
+{% for s in servizi %}
+- [{{ s.titolo }}]({{ abs_url('/i-nostri-servizi#' ~ s.id) }}): {{ s.testo|join(' ') }}
+{% endfor %}
+
+## Prossimi eventi
+{% for e in prossimi %}
+- [{{ e.titolo }}]({{ abs_url(e.path) }}): {{ e.data_lunga }}{% if e.ora %} ore {{ e.ora_it }}{% endif %}, {{ e.luogo_completo }}.{% if e.biglietti %} Biglietti: {{ e.biglietti }}{% endif %}
+
+{% else %}
+- Nessun evento in programma al momento: nuovi annunci sui social di AREA30.
+{% endfor %}
+
+## Eventi passati (rassegna Controtempo e altri)
+{% for e in passati %}
+- [{{ e.titolo }}]({{ abs_url(e.path) }}): {{ data_it(e.data, giorno=false) }}{% if e.luogo %}, {{ e.luogo }}{% endif %}, {{ e.citta }}
+{% endfor %}
+
+## Pagine
+- [Home]({{ abs_url('/') }})
+- [I nostri servizi]({{ abs_url('/i-nostri-servizi') }})
+- [Eventi passati]({{ abs_url('/eventi-passati') }})
+- [Parlano di noi]({{ abs_url('/parlano-di-noi') }})
+- [Contatti]({{ abs_url('/contattaci') }})
+
+## Social
+{% for k, v in site.social.items() if v %}
+- {{ k|capitalize }}: {{ v }}
+{% endfor %}

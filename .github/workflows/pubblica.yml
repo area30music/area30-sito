@@ -1,0 +1,62 @@
+name: Pubblica il sito
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # ogni notte poco dopo mezzanotte (ora italiana): sposta gli eventi passati e aggiorna i dati per Google
+    - cron: "10 23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Cache immagini ottimizzate
+        uses: actions/cache@v4
+        with:
+          path: .cache/img
+          key: img-${{ hashFiles('media/**') }}
+          restore-keys: img-
+      - name: Costruisci il sito
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          BASE_PATH: ${{ vars.BASE_PATH }}
+          NOINDEX: ${{ vars.NOINDEX }}
+        run: python build.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Mantieni attivo l'aggiornamento notturno
+        # GitHub sospende i lavori pianificati dopo 60 giorni senza modifiche: questo li tiene attivi
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/pubblica.yml/enable" || true

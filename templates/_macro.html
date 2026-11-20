@@ -1,0 +1,58 @@
+{% macro picture(img, sizes="100vw", cls="", eager=false, attrs="") -%}
+{% if img %}<picture><source type="image/webp" srcset="{{ img.srcset }}" sizes="{{ sizes }}"><img src="{{ img.src }}" alt="{{ img.alt }}" width="{{ img.width }}" height="{{ img.height }}"{% if cls %} class="{{ cls }}"{% endif %} {% if eager %}fetchpriority="high" loading="eager"{% else %}loading="lazy"{% endif %} decoding="async" {{ attrs|safe }}></picture>{% endif %}
+{%- endmacro %}
+
+{% macro icon(name, cls="ico") -%}
+<svg class="{{ cls }}" aria-hidden="true" focusable="false"><use href="#i-{{ name }}"></use></svg>
+{%- endmacro %}
+
+{% macro cal_buttons(e) -%}
+<div class="cal-menu">
+  <button type="button" class="btn btn-ghost cal-toggle" aria-expanded="false">{{ icon("calendar") }}<span>Aggiungi al calendario</span></button>
+  <div class="cal-list" hidden>
+    <a href="{{ e.google_cal }}" target="_blank" rel="noopener">Google Calendar</a>
+    <a href="{{ url(e.path ~ '.ics') }}" download="{{ e.slug }}.ics">iPhone / Apple Calendar</a>
+    <a href="{{ url(e.path ~ '.ics') }}" download="{{ e.slug }}.ics">Outlook e altri (.ics)</a>
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro event_card(e, big=false) -%}
+<article class="ev-card{% if big %} ev-card--big{% endif %} reveal" data-end="{{ e.fine.isoformat() }}">
+  <a class="ev-poster" href="{{ url(e.path) }}" aria-label="Dettagli: {{ e.titolo }}">
+    {{ picture(e.img, "(min-width: 1100px) 420px, (min-width: 700px) 45vw, 90vw") }}
+    <span class="ev-date-chip"><b>{{ e.data.day }}</b><small>{{ ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"][e.data.month-1] }}</small></span>
+  </a>
+  <div class="ev-body">
+    {% if e.rassegna %}<p class="eyebrow">{{ e.rassegna }}</p>{% endif %}
+    <h3 class="ev-title"><a href="{{ url(e.path) }}">{{ e.titolo }}</a></h3>
+    {% if e.descrizione %}<p class="ev-desc">{{ e.descrizione }}</p>{% endif %}
+    <ul class="ev-meta">
+      <li>{{ icon("calendar") }}<span><time datetime="{{ e.iso }}">{{ e.data_lunga }}{% if e.ora %} · ore {{ e.ora_it }}{% endif %}</time>{% if e.apertura %}<br><small>Apertura porte ore {{ e.apertura|replace(":", ".") }}</small>{% endif %}</span></li>
+      {% if e.luogo or e.indirizzo %}<li>{{ icon("pin") }}<span>{{ e.luogo }}{% if e.indirizzo %}<br><small>{{ e.indirizzo }} – {{ e.citta }}</small>{% endif %}</span></li>{% endif %}
+    </ul>
+    <div class="ev-actions">
+      {% if e.biglietti %}<a class="btn btn-gold" href="{{ e.biglietti }}" target="_blank" rel="noopener">{{ icon("ticket") }}<span>Acquista qui</span></a>{% endif %}
+      {{ cal_buttons(e) }}
+    </div>
+  </div>
+</article>
+{%- endmacro %}
+
+{% macro poster_tile(e) -%}
+<a class="poster-tile reveal" href="{{ url(e.path) }}">
+  <span class="poster-img">{{ picture(e.img, "(min-width: 1200px) 300px, (min-width: 700px) 30vw, 45vw") }}</span>
+  <span class="poster-cap"><b>{{ e.titolo }}</b><small>{{ data_it(e.data, giorno=false) }}</small></span>
+</a>
+{%- endmacro %}
+
+{% macro page_hero(titolo, sottotitolo="", kicker="") -%}
+<header class="page-hero">
+  <div class="beams" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap">
+    {% if kicker %}<p class="eyebrow reveal">{{ kicker }}</p>{% endif %}
+    <h1 class="display reveal">{{ titolo }}</h1>
+    {% if sottotitolo %}<p class="lead reveal">{{ sottotitolo }}</p>{% endif %}
+  </div>
+</header>
+{%- endmacro %}
