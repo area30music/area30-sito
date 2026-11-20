@@ -67,12 +67,10 @@ def main(files: list[str]) -> int:
         }
         if e.og:
             body["chrome_web_image"] = e.og
-        req = urllib.request.Request(API, data=json.dumps(body).encode(), method="POST", headers={
-            "Content-Type": "application/json", "Authorization": f"Key {key}"})
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
-                print(f"Notifica inviata per «{e.titolo}»: {r.status} {r.read().decode()[:200]}")
-                inviati += 1
+            r = build.onesignal_api("POST", API, key, body)
+            print(f"Notifica inviata per «{e.titolo}»: {str(r)[:200]}")
+            inviati += 1
         except urllib.error.HTTPError as ex:
             print(f"Errore OneSignal per «{e.titolo}»: {ex.code} {ex.read().decode()[:300]}", file=sys.stderr)
             return 1

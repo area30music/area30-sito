@@ -309,17 +309,31 @@ def link_notifica(nid: str, titolo: str, messaggio: str, link: str = "", immagin
     return abs_url("/notifiche") + "?" + urlencode(q, quote_via=quote)
 
 
+def onesignal_api(method: str, url: str, key: str, body: dict | None = None) -> dict:
+    """Chiamata a OneSignal: funziona sia con le chiavi nuove ("Key …") sia con quelle vecchie ("Basic …")."""
+    import urllib.error
+    import urllib.request
+    data = json.dumps(body).encode() if body is not None else None
+    for schema in ("Key", "Basic"):
+        req = urllib.request.Request(url, data=data, method=method, headers={
+            "Content-Type": "application/json", "Authorization": f"{schema} {key}"})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.loads(r.read().decode() or "{}")
+        except urllib.error.HTTPError as ex:
+            if ex.code in (401, 403) and schema == "Key":
+                continue
+            raise
+    return {}
+
+
 def carica_storico(app_id: str) -> list[dict]:
     """Storico delle notifiche inviate, letto da OneSignal (serve la chiave, disponibile solo su GitHub)."""
     key = os.environ.get("ONESIGNAL_REST_API_KEY", "").strip()
     if not key or not app_id:
         return []
-    import urllib.request
     try:
-        req = urllib.request.Request(f"https://api.onesignal.com/notifications?app_id={app_id}&limit=50",
-                                     headers={"Authorization": f"Key {key}"})
-        with urllib.request.urlopen(req, timeout=30) as r:
-            dati = json.loads(r.read().decode())
+        dati = onesignal_api("GET", f"https://api.onesignal.com/notifications?app_id={app_id}&limit=50", key)
     except Exception as ex:  # noqa: BLE001
         print(f"  ! storico notifiche non disponibile: {ex}", file=sys.stderr)
         return []

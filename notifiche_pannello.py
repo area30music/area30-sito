@@ -33,11 +33,7 @@ FMT_IT = "%d/%m/%Y alle %H:%M"
 
 
 def chiama(metodo: str, url: str, key: str, body: dict | None = None) -> dict:
-    req = urllib.request.Request(url, method=metodo, data=json.dumps(body).encode() if body else None,
-                                 headers={"Content-Type": "application/json", "Authorization": f"Key {key}"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        txt = r.read().decode() or "{}"
-        return json.loads(txt)
+    return build.onesignal_api(metodo, url, key, body)
 
 
 def quando_di(v) -> datetime | None:
