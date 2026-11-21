@@ -596,6 +596,7 @@ def build():
     # Notifiche: attive solo con l'ID di OneSignal e sul sito definitivo (non nell'anteprima)
     onesignal_id = str(site.get("onesignal_app_id") or "").strip() if not NOINDEX else ""
     os_files = onesignal_locale() if onesignal_id else {}
+    storico = carica_storico(onesignal_id) if onesignal_id else []
     servizi = load_yaml(CONTENT / "servizi.yml").get("servizi", [])
     galleria = load_yaml(CONTENT / "galleria.yml").get("foto", []) or []
     stampa = load_yaml(CONTENT / "rassegna-stampa.yml").get("articoli", []) or []
@@ -655,7 +656,7 @@ def build():
                       trim_blocks=True, lstrip_blocks=True)
     env.globals.update(
         url=url, abs_url=abs_url, base_path=BASE_PATH, site=site, today=today, year=today.year, css=css, noindex=NOINDEX,
-        js_v=asset_version(ASSETS / "js" / "main.js"), os_page_js=os_files.get("OneSignalSDK.page.es6.js", ""), icon_v=asset_version(ASSETS / "icon-512.png"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
+        js_v=asset_version(ASSETS / "js" / "main.js"), ultima_notifica=(storico[0]["quando"] if storico else ""), os_page_js=os_files.get("OneSignalSDK.page.es6.js", ""), icon_v=asset_version(ASSETS / "icon-512.png"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
         wa=lambda testo="": f"https://wa.me/{site['whatsapp']}" + (f"?text={quote(testo)}" if testo else ""),
     )
 
@@ -726,7 +727,6 @@ def build():
         (OUT / "eventi" / f"{e.slug}.ics").write_text(ics(e, site), encoding="utf-8")
 
     if onesignal_id:
-        storico = carica_storico(onesignal_id)
         print(f"  storico notifiche: {len(storico)}")
         render("notifiche.html", "/notifiche", "notifiche.html", title="Notifiche | AREA30",
                storico=storico, generato=datetime.now(TZ).isoformat(), storico_json=json.dumps(storico, ensure_ascii=False).replace("</", "<\\/"),

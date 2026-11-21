@@ -248,6 +248,23 @@
     window.addEventListener("onesignal-errore", () => { clearTimeout(t); res(null); }, { once: true });
   });
   const iscritto = () => !!(window.__osPronto && window.__osPronto.User.PushSubscription.optedIn);
+  // puntino rosso sulla campanella: notifica nuova non ancora vista, oppure notifiche non attive
+  const VISTE = "area30-notifiche-viste";
+  const puntino = (stato) => {
+    if (!bell) return;
+    let vista = 0;
+    try { vista = +localStorage.getItem(VISTE) || 0; } catch (_) { /* niente */ }
+    if (location.pathname.endsWith("/notifiche")) {
+      vista = Date.now();
+      try { localStorage.setItem(VISTE, String(vista)); } catch (_) { /* niente */ }
+    }
+    const ultima = Date.parse(bell.dataset.ultima || "") || 0;
+    const nuova = ultima > vista && ultima <= Date.now();
+    bell.classList.toggle("nuova", nuova);
+    const d = $(".bell-dot", bell);
+    if (d) d.hidden = !(nuova || stato === "spento");
+    bell.setAttribute("aria-label", nuova ? "Notifiche: c'è una novità" : "Notifiche");
+  };
   const statoAttuale = () => {
     if (!supportate) return "nascosto";
     if (Notification.permission === "denied") return "bloccate";
@@ -262,7 +279,7 @@
       const l = $("[data-notify-label]", b);
       if (l) l.textContent = stato === "attivo" ? "Notifiche attive ✓" : (b.closest(".app-band") ? "Avvisami dei nuovi concerti" : "Attiva le notifiche");
     });
-    if (bell) bell.hidden = stato !== "spento";
+    puntino(stato);
     band();
     window.dispatchEvent(new CustomEvent("notifiche-stato", { detail: stato }));
   };
@@ -286,8 +303,9 @@
   };
   window.__area30Notifiche = { richiedi, statoAttuale, osPronto, configurate, supportate };
 
+  puntino(configurate && supportate ? statoAttuale() : "nascosto");
   if (configurate && supportate && (!isIOS || standalone)) {
-    [...notifyBtns, ...$$("[data-notify-yes]"), bell].filter(Boolean).forEach((b) => b.addEventListener("click", richiedi));
+    [...notifyBtns, ...$$("[data-notify-yes]")].forEach((b) => b.addEventListener("click", richiedi));
     aggiorna();
     osPronto().then((o) => {
       if (!o) return;
@@ -317,7 +335,7 @@
     }
   } else if (configurate && isIOS && !standalone) {
     // iPhone/iPad nel browser: per le notifiche serve l'app installata
-    if (bell) { bell.hidden = false; bell.addEventListener("click", () => apriSheet("ios", true)); }
+    puntino("spento");
     if (!location.pathname.endsWith("/notifiche")) setTimeout(() => apriSheet("ios"), 10000);
   }
   if (!standalone) {

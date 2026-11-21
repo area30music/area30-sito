@@ -425,9 +425,12 @@ a:hover .link-arrow .ico,.link-arrow:hover .ico{transform:translateX(5px)}
 
 /* Notifiche: campanella e riquadro di attivazione */
 .header-inner .bell{position:relative;z-index:3;width:46px;height:46px;margin-left:auto;margin-right:10px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line-gold);color:var(--gold);transition:background .3s,color .3s}
+.header-inner .bell[aria-current]{background:rgba(227,189,99,.16)}
+.bell-dot[hidden]{display:none}
 .header-inner .bell[hidden]{display:none}
 .header-inner .bell:hover{background:var(--gold);color:#111}
-.bell .ico{width:20px;height:20px;animation:ring 2.4s ease-in-out 2s 2}
+.bell .ico{width:20px;height:20px}
+.bell.nuova .ico{animation:ring 2.4s ease-in-out 1.5s 2}
 .bell-dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 2px var(--bg)}
 @keyframes ring{0%,100%{transform:rotate(0)}10%{transform:rotate(14deg)}20%{transform:rotate(-12deg)}30%{transform:rotate(8deg)}40%{transform:rotate(-4deg)}50%{transform:rotate(0)}}
 @media (min-width:1024px){.header-inner .bell{order:3;margin:0 0 0 18px;width:42px;height:42px}}

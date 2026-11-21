@@ -11,6 +11,7 @@
       <button type="button" class="btn btn-gold" data-install hidden>{{ icon("download") }}<span>Installa l'app</span></button>
     </div>
 
+    <p class="hint aiuto-bloccate" style="margin-top:12px" id="aiuto-bloccate" hidden>Non ricevi le notifiche? Su iPhone: Impostazioni → Notifiche → AREA30 → Consenti notifiche. Su Android e computer: lucchetto accanto all'indirizzo → Notifiche → Consenti.</p>
     <h2 class="storico-h">Storico notifiche</h2>
     <div class="storico" id="storico">
       {% for n in storico %}
@@ -26,7 +27,7 @@
       <p class="storico-vuoto" id="storico-vuoto"{% if storico %} hidden{% endif %}>Ancora nessuna notifica. Quando AREA30 annuncerà un nuovo evento la troverai qui.</p>
     </div>
 
-    <details class="guida-box problemi" id="dettagli">
+    <details class="guida-box problemi" id="dettagli" hidden>
       <summary><b>Problemi con le notifiche?</b></summary>
       <ul class="stato-grid" id="stato-notifiche" style="margin-top:16px">
         <li><span>Il tuo dispositivo supporta le notifiche</span><b data-s="supporto">…</b></li>
@@ -148,10 +149,11 @@
     var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1 && !/Android/.test(navigator.userAgent));
     var st = N ? N.statoAttuale() : "nascosto";
     box.classList.toggle("ok", st === "attivo");
+    document.getElementById("aiuto-bloccate").hidden = st !== "bloccate";
     b.hidden = st !== "spento" || (ios && !standalone);
     t.textContent = st === "attivo" ? "Notifiche attive su questo dispositivo ✓"
       : ios && !standalone ? "Per ricevere le notifiche su iPhone installa l'app sulla schermata Home."
-      : st === "bloccate" ? "Le notifiche sono bloccate: apri «Problemi con le notifiche?» qui sotto."
+      : st === "bloccate" ? "Le notifiche sono bloccate su questo dispositivo."
       : st === "nascosto" ? "Questo dispositivo non supporta le notifiche."
       : "Attiva le notifiche per sapere subito dei nuovi concerti.";
   }
@@ -239,7 +241,11 @@
     }
     apri(nuova);
   }
-  document.getElementById("dettagli").addEventListener("toggle", function (e) { if (e.target.open) controlla(); });
+  // pannello tecnico: solo aprendo la pagina con ?diagnosi (serve ad AREA30 in caso di problemi)
+  var det = document.getElementById("dettagli");
+  if (/[?&]diagnosi/.test(location.search)) { det.hidden = false; det.open = true; controlla(); }
+  det.addEventListener("toggle", function (e) { if (e.target.open) controlla(); });
+  window.addEventListener("notifiche-stato", function (e) { document.getElementById("aiuto-bloccate").hidden = e.detail !== "bloccate"; });
   document.getElementById("attiva-ora").addEventListener("click", async function () {
     if (window.__area30Notifiche) await window.__area30Notifiche.richiedi();
     statoBreve();

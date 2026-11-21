@@ -89,7 +89,7 @@
         </div>
       </div>
     </nav>
-    {% if onesignal_id %}<button class="bell" type="button" data-notify-bell hidden aria-label="Attiva le notifiche dei nuovi concerti">{{ icon("bell") }}<span class="bell-dot" aria-hidden="true"></span></button>{% endif %}
+    {% if onesignal_id %}<a class="bell" href="{{ url('/notifiche') }}" data-notify-bell data-ultima="{{ ultima_notifica }}" aria-label="Notifiche"{% if path == "/notifiche" %} aria-current="page"{% endif %}>{{ icon("bell") }}<span class="bell-dot" aria-hidden="true" hidden></span></a>{% endif %}
     <button class="menu-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Apri il menu"><span></span><span></span></button>
   </div>
 </header>
