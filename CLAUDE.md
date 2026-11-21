@@ -46,3 +46,5 @@ Dati per Google (Event), sitemap, llms.txt, calendario .ics e anteprime per What
 - Mai chiedere la chiave REST in chat: la inserisce l'utente nei segreti di GitHub.
 - Notifiche manuali/programmate: collezione Pages CMS "Notifiche" → `contenuti/notifiche/*.yml`; il job `notifiche-pannello` esegue `notifiche_pannello.py` (invio subito o `send_after` su OneSignal, annulla le programmate modificate/eliminate) e riscrive nel file `invia: false`, `stato`, `onesignal_id`.
 - Icone dell'app: `assets/icon-*.png` e `apple-touch-icon.png` con il logo AREA30 completo; `favicon.ico` resta il "30" (leggibile in piccolo).
+- Pagina /notifiche: storico (da API OneSignal nel build, cron ogni 15 min) + dettaglio (?n=&t=&m=&l=&i=). Pannello tecnico nascosto: aprire https://area30.it/notifiche?diagnosi per vedere stato SW, OneSignal e rete.
+- File OneSignal (sw e page SDK) sono scaricati nel build e serviti da /assets/onesignal/ per funzionare anche con VPN/blocchi.
