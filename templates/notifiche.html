@@ -72,6 +72,7 @@
   </div>
 </dialog>
 <script id="storico-dati" type="application/json">{{ storico_json|safe }}</script>
+<script>window.__storicoGenerato = "{{ generato }}";</script>
 <script>
 (function () {
   function set(k, testo, ok) {
@@ -166,6 +167,12 @@
   }
   var CH = "area30-storico-locale", locali = [];
   try { locali = JSON.parse(localStorage.getItem(CH) || "[]"); } catch (_) {}
+  // le copie salvate sul telefono valgono solo finché lo storico del sito non si è aggiornato:
+  // dopo, comanda OneSignal (se una notifica è stata cancellata lì, sparisce anche qui)
+  var generato = Date.parse(window.__storicoGenerato || "") || 0;
+  var idServer = {}; dati.forEach(function (x) { idServer[x.id] = 1; });
+  locali = locali.filter(function (x) { return idServer[x.id] ? false : Date.parse(x.quando) > generato; });
+  try { localStorage.setItem(CH, JSON.stringify(locali)); } catch (_) {}
   function chiave(x) { return (x.id || "") + "|" + (x.titolo || "") + "|" + (x.messaggio || "").slice(0, 40); }
   var noti = {}; dati.forEach(function (x) { noti[x.id] = 1; noti[chiave(x)] = 1; });
   var box = document.getElementById("storico");
@@ -182,7 +189,8 @@
     b.querySelector("b").textContent = x.titolo || "AREA30";
     b.querySelector(".notif-card-txt > span").textContent = x.messaggio || "";
     // in ordine di data
-    var dopo = Array.prototype.find.call(box.querySelectorAll(".notif-card"), function (c) { return c.dataset.quando < x.quando; });
+    var t = Date.parse(x.quando);
+    var dopo = Array.prototype.find.call(box.querySelectorAll(".notif-card"), function (c) { return Date.parse(c.dataset.quando) < t; });
     box.insertBefore(b, dopo || document.getElementById("storico-vuoto"));
     b.addEventListener("click", function () { apri(x); });
     var dd = b.querySelector("[data-data]"); if (dd && typeof dataIt === "function") dd.textContent = dataIt(x.quando);

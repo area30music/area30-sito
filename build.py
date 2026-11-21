@@ -411,7 +411,7 @@ def carica_storico(app_id: str) -> list[dict]:
             "immagine": immagine_notifica(n),
             "quando": datetime.fromtimestamp(int(quando), TZ).isoformat(),
         })
-    out.sort(key=lambda x: x["quando"], reverse=True)
+    out.sort(key=lambda x: datetime.fromisoformat(x["quando"]), reverse=True)
     return out
 
 
@@ -729,7 +729,7 @@ def build():
         storico = carica_storico(onesignal_id)
         print(f"  storico notifiche: {len(storico)}")
         render("notifiche.html", "/notifiche", "notifiche.html", title="Notifiche | AREA30",
-               storico=storico, storico_json=json.dumps(storico, ensure_ascii=False).replace("</", "<\\/"),
+               storico=storico, generato=datetime.now(TZ).isoformat(), storico_json=json.dumps(storico, ensure_ascii=False).replace("</", "<\\/"),
                description="Attiva le notifiche di AREA30 per sapere subito quando annunciamo un nuovo concerto.",
                no_sitemap=True, noindex_page=True)
 
