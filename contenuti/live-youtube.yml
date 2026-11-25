@@ -1,6 +1,10 @@
 # Archivio delle puntate YouTube mostrate nella pagina Live.
 # Si aggiorna da solo con i nuovi video. Per nascondere un video aggiungi:  nascosto: true
 video:
+- id: NB_ZDYmbITY
+  titolo: Ospite Vivian dei Da Blitz - La  Musica dei Miei Amici - Maraman
+  data: '2026-11-25'
+  durata: null
 - id: KE0BQP3c57g
   titolo: Ospite Simona Zanini - La  Musica dei Miei Amici - Maraman
   data: '2026-11-24'
@@ -26,6 +30,38 @@ video:
   data: '2026-07-16'
   durata: 4935
   tipo: video
+- id: GM9qGIgEJC0
+  titolo: I Milano 84 vi aspettano! 🎹
+  data: '2026-06-17'
+  durata: null
+- id: x_3K61EFH4Q
+  titolo: Manca pochissimo al Festival!
+  data: '2026-06-16'
+  durata: null
+- id: bMdtXlK-rm0
+  titolo: La line up è questa. Il conto alla rovescia è iniziato!⏳🔥
+  data: '2026-06-15'
+  durata: null
+- id: xYrUfoPyxwQ
+  titolo: Ciao bella gente!
+  data: '2026-06-13'
+  durata: null
+- id: dKnTuYdntqU
+  titolo: Un messaggio speciale per voi da Alberto Camerini 🎤
+  data: '2026-06-12'
+  durata: null
+- id: MxE90behkWk
+  titolo: 'Claudio Calorio e lo speciale: "Terra verde" su Telecupole il 20 giugno'
+  data: '2026-06-12'
+  durata: null
+- id: L67Me2bwYsQ
+  titolo: Cosa sapere sul Controtempo Summer Festival del 20/6
+  data: '2026-06-12'
+  durata: null
+- id: jPiP3IGbJDY
+  titolo: Guarda l'intervista di Antonio Gastaldi, AREA30, a Telecupole
+  data: '2026-06-11'
+  durata: null
 - id: EOBPhzqxFbQ
   titolo: La Musica dei Miei Amici – AREA30 | Ospite Antonio Gastaldi, Imprenditore
   data: '2026-06-09'
