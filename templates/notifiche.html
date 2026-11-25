@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_macro.html" import icon, page_hero %}
 {% block content %}
-{{ page_hero("Notifiche", "Gli avvisi di AREA30: nuovi concerti, ultimi biglietti e novità.", "Avvisi") }}
+{{ page_hero(T.notifiche.titolo, T.notifiche.sottotitolo, T.notifiche.sopratitolo) }}
 <section class="section" style="padding-top:0">
   <div class="wrap notifiche-wrap">
     <div class="notif-stato" id="notif-stato">

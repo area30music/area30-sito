@@ -1,0 +1,763 @@
+# Archivio delle puntate YouTube mostrate nella pagina Live.
+# Si aggiorna da solo con i nuovi video. Per nascondere un video aggiungi:  nascosto: true
+video:
+- id: KE0BQP3c57g
+  titolo: Ospite Simona Zanini - La  Musica dei Miei Amici - Maraman
+  data: '2026-11-24'
+  durata: 7618
+  tipo: diretta
+- id: QpmeWmCCPxA
+  titolo: La Musica dei Miei Amici - Maraman – Ospiti Sanremo Play
+  data: '2026-11-16'
+  durata: 7812
+  tipo: diretta
+- id: SNCykO0VT_E
+  titolo: La Musica dei Miei Amici - Maraman – Ospiti Absolute5
+  data: '2026-11-10'
+  durata: 7709
+  tipo: diretta
+- id: GMLDJrxAcw4
+  titolo: La Musica dei Miei Amici – Ospiti MILANO 84
+  data: '2026-11-03'
+  durata: 7449
+  tipo: diretta
+- id: r9imIHMVtZ4
+  titolo: Controtempo Summer Festival 2026 ☀️ Lo Speciale di TERRAVERDE con Claudio Calorio su Telecupole
+  data: '2026-07-16'
+  durata: 4935
+  tipo: video
+- id: EOBPhzqxFbQ
+  titolo: La Musica dei Miei Amici – AREA30 | Ospite Antonio Gastaldi, Imprenditore
+  data: '2026-06-09'
+  durata: 6234
+  tipo: diretta
+- id: 3TjUq9fMdv8
+  titolo: Compilation Anni ’80 in Vinile – Ep. 16 | Mixage Inverno (1986)
+  data: '2026-06-05'
+  durata: 3570
+  tipo: diretta
+- id: jBq8P2C1qAY
+  titolo: La Musica dei Miei Amici – AREA30 | Ospite Barbara Giannecchini,  Food tutor
+  data: '2026-06-02'
+  durata: 6256
+  tipo: diretta
+- id: 3wh5MzqRC5w
+  titolo: La Musica dei Miei Amici – AREA30 | Ospite Enrico Franzero, Consulente Sistemi di Gestione
+  data: '2026-05-26'
+  durata: 5912
+  tipo: diretta
+- id: jWX159L4NwM
+  titolo: Compilation Anni ’80 in Vinile – Ep. 15 | Festival Bar Vol.2 (1984)
+  data: '2026-05-22'
+  durata: 3681
+  tipo: diretta
+- id: NaeZYJb7igE
+  titolo: La Musica dei Miei Amici – AREA30 | Ospite Attia Abdelaziz Fathy per gli amici Max - Pizzaiolo
+  data: '2026-05-19'
+  durata: 5778
+  tipo: diretta
+- id: fmZqqbq7p7w
+  titolo: Compilation Anni ’80 in Vinile – Ep. 14 | Festival Bar Vol.1 (1984)
+  data: '2026-05-15'
+  durata: 4553
+  tipo: diretta
+- id: ArkAbY0n9WI
+  titolo: La Musica dei Miei Amici – AREA30 | Ospiti Roberto Napoli e Marika Gerbaudo - Cantanti
+  data: '2026-05-12'
+  durata: 5909
+  tipo: diretta
+- id: SKKM48m5HWw
+  titolo: Compilation Anni ’80 in Vinile – Ep. 13 | CanzonI per l'Estate 1 (1984)
+  data: '2026-05-08'
+  durata: 4061
+  tipo: diretta
+- id: ndlh2q9QNdo
+  titolo: La Musica dei Miei Amici – AREA30 | Ospite Antonio Lattarulo - Consulente di Direzione
+  data: '2026-05-05'
+  durata: 5881
+  tipo: diretta
+- id: wpm3o8LL5WU
+  titolo: Compilation Anni ’80 in Vinile – Ep. 12 | Mixage 5 Estate (1985)
+  data: '2026-05-01'
+  durata: 3925
+  tipo: diretta
+- id: Kl-pd1C6WLY
+  titolo: Compilation Anni ’80 in Vinile – Ep. 12 | Mixage 5 Estate (1985)
+  data: '2026-04-30'
+  durata: 3955
+  tipo: video
+- id: sydZOekq874
+  titolo: La Musica dei Miei Amici – AREA30 | Ospite Claudio Calorio, Giornalista e Conduttore di Telecupole
+  data: '2026-04-28'
+  durata: 5929
+  tipo: diretta
+- id: Q-yO8_bXBuA
+  titolo: Compilation - Ep. 11 -  Mixage Inverno (1984)
+  data: '2026-04-24'
+  durata: 3891
+  tipo: diretta
+- id: m1tawU3e4JQ
+  titolo: La Musica dei Miei Amici - Manuela Addeo
+  data: '2026-04-21'
+  durata: 6253
+  tipo: diretta
+- id: FzoxB2NUDGY
+  titolo: Compilation - Ep. 10 -  Freeway 2 (1984)
+  data: '2026-04-17'
+  durata: 4042
+  tipo: diretta
+- id: pHFcmvhS3O4
+  titolo: Compilation - Ep. 9 -  Mixtime (1988)
+  data: '2026-04-10'
+  durata: 4354
+  tipo: diretta
+- id: VPcxSoiNxmQ
+  titolo: Compilation - Ep. 8 -  Freeway (1984)
+  data: '2026-04-03'
+  durata: 3614
+  tipo: diretta
+- id: bLMezwvV4yI
+  titolo: La Musica dei Miei Amici - Cinzia Spagnolo
+  data: '2026-03-31'
+  durata: 6004
+  tipo: diretta
+- id: LeIWZmlFCKc
+  titolo: Compilation - Ep. 7 -  Masterpiece (1984)
+  data: '2026-03-27'
+  durata: 3714
+  tipo: diretta
+- id: 4cDxLgJiZW8
+  titolo: La Musica dei Miei Amici - Simona Galvagno e Luca Panuele
+  data: '2026-03-24'
+  durata: 6282
+  tipo: diretta
+- id: WVHmGjmdL8w
+  titolo: Compilation - Ep. 6 -  Flying Mix (1984)
+  data: '2026-03-20'
+  durata: 3990
+  tipo: diretta
+- id: NjArkRks6pU
+  titolo: La Musica dei Miei Amici - Simone Pettini
+  data: '2026-03-17'
+  durata: 5922
+  tipo: diretta
+- id: 9lk6YNSxZTc
+  titolo: Compilation - Ep. 5 -  Magic Deejay (1984)
+  data: '2026-03-13'
+  durata: 3865
+  tipo: diretta
+- id: AUD_g76Vb6Y
+  titolo: La Musica dei Miei Amici - Alessandra Forlani
+  data: '2026-03-10'
+  durata: 5543
+  tipo: diretta
+- id: SdCMfeeJVBM
+  titolo: Compilation - Ep. 4 -  Studio 54 Vol. 5 (1982)
+  data: '2026-03-06'
+  durata: 3500
+  tipo: diretta
+- id: 524neA_s20E
+  titolo: La Musica dei Miei Amici - Luca Galtieri
+  data: '2026-03-03'
+  durata: 6009
+  tipo: diretta
+- id: k-_wr2bLNfc
+  titolo: Compilation - Ep. 3 -  Mixage (1983)
+  data: '2026-02-27'
+  durata: 3050
+  tipo: diretta
+- id: 3VL7ufSqEyY
+  titolo: La Musica dei Miei Amici - Andrea Guarriello
+  data: '2026-02-24'
+  durata: 6403
+  tipo: diretta
+- id: 6eQrMxyq1Cc
+  titolo: Compilation - Ep. 2 -  Hula Hoop (1983)
+  data: '2026-02-20'
+  durata: 3445
+  tipo: diretta
+- id: kkMMuByiZAs
+  titolo: La Musica dei Miei Amici - Silvio Malena
+  data: '2026-02-17'
+  durata: 6350
+  tipo: diretta
+- id: OwKUhoNDNp4
+  titolo: Compilation - Ep.1
+  data: '2026-02-13'
+  durata: 3399
+  tipo: diretta
+- id: cPZf0YKx06Y
+  titolo: La Musica dei Miei Amici - Marco Mosca
+  data: '2026-02-10'
+  durata: 4619
+  tipo: diretta
+- id: 1bwc5bBx1ik
+  titolo: La Musica dei Miei Amici - Fabrizio e Fatima
+  data: '2026-02-03'
+  durata: 6008
+  tipo: diretta
+- id: MXTlU0xypak
+  titolo: La Musica dei Miei Amici - Alessandra Sassa Speaker
+  data: '2026-01-27'
+  durata: 7106
+  tipo: diretta
+- id: AAlTrcA7NDo
+  titolo: La Musica dei Miei Amici - Claudio Perugia
+  data: '2026-01-20'
+  durata: 6097
+  tipo: diretta
+- id: Cj0QYgJW8o0
+  titolo: La Musica dei Miei Amici - Alex Gregorio in arte Alex DJG
+  data: '2026-01-13'
+  durata: 6585
+  tipo: diretta
+- id: WLo7Bi4w8_4
+  titolo: Natale con AREA30
+  data: '2025-12-25'
+  durata: 2713
+  tipo: diretta
+- id: ru21fk9bkec
+  titolo: Auguri di Natale dell'Amministrazione Comunale
+  data: '2025-12-23'
+  durata: 5086
+  tipo: diretta
+- id: hVC3SDOmB9E
+  titolo: La Musica dei Miei Amici - Alessio Borgo
+  data: '2025-12-16'
+  durata: 5690
+  tipo: diretta
+- id: ipt-ZufAY0s
+  titolo: Il Salotto di Controtempo presenta Sbalzi d'Amore - un libro di Piero Vallero - EP.7
+  data: '2025-11-11'
+  durata: 5822
+  tipo: diretta
+- id: 2iE4BqFYSEw
+  titolo: Il Salotto di Controtempo presenta Sbalzi d'Amore - un libro di Piero Vallero - EP.6
+  data: '2025-11-04'
+  durata: 5125
+  tipo: diretta
+- id: FazJ3e_mNP8
+  titolo: Il Salotto di Controtempo presenta Sbalzi d'Amore - un libro di Piero Vallero - EP.5
+  data: '2025-10-28'
+  durata: 6519
+  tipo: diretta
+- id: dH2KdtiDVSw
+  titolo: Il Salotto di Controtempo presenta Sbalzi d'Amore - un libro di Piero Vallero - EP.4
+  data: '2025-10-21'
+  durata: 5437
+  tipo: diretta
+- id: hMqSf61NUTI
+  titolo: Il Salotto di Controtempo presenta Sbalzi d'Amore - un libro di Piero Vallero - EP.3
+  data: '2025-10-14'
+  durata: 4728
+  tipo: diretta
+- id: psOibx9JJWg
+  titolo: Il Salotto di Controtempo presenta Sbalzi d'Amore - un libro di Piero Vallero - EP.2
+  data: '2025-10-07'
+  durata: 5653
+  tipo: diretta
+- id: IUcT0qXOtAk
+  titolo: Il Salotto di Controtempo presenta Sbalzi d'Amore - un libro di Piero Vallero - EP.1
+  data: '2025-09-30'
+  durata: 5261
+  tipo: diretta
+- id: JJ2Ztndd6p4
+  titolo: 10th Anniversary AREA30
+  data: '2025-09-07'
+  durata: 211
+  tipo: video
+- id: sRH4zzfhPvU
+  titolo: La Musica dei Miei Amici - Alex Gregorio in arte Alex DJG
+  data: '2025-05-20'
+  durata: 4417
+  tipo: diretta
+- id: Styz0EIGnKk
+  titolo: La Musica dei Miei Amici - Laura Spagnolo
+  data: '2025-05-13'
+  durata: 5396
+  tipo: diretta
+- id: RGjFpZk1_rw
+  titolo: La Musica dei Miei Amici - Roberta Gianoglio
+  data: '2025-04-29'
+  durata: 5678
+  tipo: diretta
+- id: ba20tcN6IIM
+  titolo: La Musica dei Miei Amici - Elisa Roggero e Alessia Sirna
+  data: '2025-04-15'
+  durata: 5610
+  tipo: diretta
+- id: ZLO7L_KIvbs
+  titolo: La Musica dei Miei Amici - Davide Diano - Mentalista
+  data: '2025-04-08'
+  durata: 5886
+  tipo: diretta
+- id: KuDq79UwCBE
+  titolo: La Musica dei Miei Amici - Roberto Napoli e Marika Gerbaudo
+  data: '2025-04-01'
+  durata: 5769
+  tipo: diretta
+- id: tIkmS85We2A
+  titolo: La Musica dei Miei Amici - Salvatore Franzè
+  data: '2025-03-18'
+  durata: 5745
+  tipo: diretta
+- id: rOTVqzAM0Gc
+  titolo: La Musica dei Miei Amici - Gruppo Animatori - Amici di Entracque
+  data: '2025-03-11'
+  durata: 5888
+  tipo: diretta
+- id: X5Xzj3UYPK8
+  titolo: La Musica dei Miei Amici - Andrea Xhemali
+  data: '2025-03-04'
+  durata: 5480
+  tipo: diretta
+- id: ruzaiHRFmy8
+  titolo: La Musica dei Miei Amici - Massimo Carignano
+  data: '2025-02-25'
+  durata: 5595
+  tipo: diretta
+- id: gaX4wayXnwA
+  titolo: La Musica dei Miei Amici - Fabio Racca - Orchestra I Roeri
+  data: '2025-02-18'
+  durata: 3775
+  tipo: diretta
+- id: 5Rp4OhYRKOQ
+  titolo: La Musica dei Miei Amici - Laura Dellavalle
+  data: '2025-02-11'
+  durata: 5837
+  tipo: diretta
+- id: TrHGwUgaijE
+  titolo: La Musica dei Miei Amici - Sergio Giacone
+  data: '2025-01-28'
+  durata: 5752
+  tipo: diretta
+- id: tUdoo3GIKHE
+  titolo: La Musica dei Miei Amici - Simona Galvagno
+  data: '2025-01-21'
+  durata: 5592
+  tipo: diretta
+- id: wmWZQnW4HGI
+  titolo: La Musica dei Miei Amici - Alessandra Forlani e Gigi Vaira
+  data: '2025-01-14'
+  durata: 4098
+  tipo: diretta
+- id: N6R7DebSvkQ
+  titolo: i Ciarloni
+  data: '2024-12-28'
+  durata: 7455
+  tipo: diretta
+- id: LWNDxCJg_Sc
+  titolo: La Musica dei Miei Amici - Andrea Favaro
+  data: '2024-12-18'
+  durata: 5333
+  tipo: diretta
+- id: X-_6yy7UevU
+  titolo: i Ciarloni
+  data: '2024-12-14'
+  durata: 7180
+  tipo: diretta
+- id: jnBrI-_8Jkk
+  titolo: La Musica dei Miei Amici - Riccardo e Lorenzo Bertello
+  data: '2024-12-10'
+  durata: 5655
+  tipo: diretta
+- id: UB6MNazUJ0c
+  titolo: i Ciarloni
+  data: '2024-12-08'
+  durata: 7300
+  tipo: diretta
+- id: owaf5YGlALI
+  titolo: La Musica dei Miei Amici - Mauro De Stefano
+  data: '2024-12-03'
+  durata: 6006
+  tipo: diretta
+- id: NiMSSzaltmA
+  titolo: La Musica dei Miei Amici - Mario Alasia
+  data: '2024-11-26'
+  durata: 3653
+  tipo: diretta
+- id: Jz7ehlIBFS8
+  titolo: La Musica dei Miei Amici - Fatima Lazhar
+  data: '2024-11-19'
+  durata: 4063
+  tipo: diretta
+- id: qXU9dSMVVZ4
+  titolo: La Musica dei Miei Amici - Romina Cortese
+  data: '2024-11-12'
+  durata: 3694
+  tipo: diretta
+- id: Ydlieic3PWQ
+  titolo: La Musica dei Miei Amici - Silvano Bertaina - Giornalista
+  data: '2024-11-05'
+  durata: 4445
+  tipo: diretta
+- id: mTvT399EeXY
+  titolo: La Musica dei Miei Amici - Marco Pedussia
+  data: '2024-10-29'
+  durata: 4667
+  tipo: diretta
+- id: GBj7MozK6VY
+  titolo: La Musica dei Miei Amici - Alessandro Cuntuliano e Carla Delbosco - Musicanti Anonimi
+  data: '2024-10-22'
+  durata: 4627
+  tipo: diretta
+- id: SvwoYCBmbdU
+  titolo: La Musica dei Miei Amici - Fabrizio Lerda
+  data: '2024-10-15'
+  durata: 4152
+  tipo: diretta
+- id: io1PY1qoyzo
+  titolo: La Musica dei Miei Amici - Piero Vallero - Sassofonista
+  data: '2024-10-08'
+  durata: 4121
+  tipo: diretta
+- id: gzJ-Ugx109Y
+  titolo: La Musica dei Miei Amici - Bruno Torta
+  data: '2024-10-01'
+  durata: 3586
+  tipo: diretta
+- id: DYyBW10ssUY
+  titolo: La Musica dei Miei Amici - Edoardo Cagnotti
+  data: '2024-09-24'
+  durata: 3740
+  tipo: diretta
+- id: 8aOVR12J02o
+  titolo: La Musica dei Miei Amici - Dario Pozzolo pt.2
+  data: '2024-09-10'
+  durata: 1841
+  tipo: diretta
+- id: -Ox_D4iVb2M
+  titolo: La Musica dei Miei Amici - Dario Pozzolo pt.1
+  data: '2024-09-10'
+  durata: 2287
+  tipo: diretta
+- id: JOFt9PEpotQ
+  titolo: Le Tue Dediche
+  data: '2021-08-07'
+  durata: 3816
+  tipo: diretta
+- id: 3U4LJe0qiSs
+  titolo: Le Tue Dediche
+  data: '2021-08-06'
+  durata: 3755
+  tipo: diretta
+- id: QSUVaER8TWI
+  titolo: Le Tue Dediche
+  data: '2021-08-05'
+  durata: 3700
+  tipo: diretta
+- id: NSIxSJebjBQ
+  titolo: Premio Giornalistico Del Roero
+  data: '2021-07-31'
+  durata: 4087
+  tipo: diretta
+- id: pfEa318wMqI
+  titolo: Le Tue Dediche
+  data: '2021-07-30'
+  durata: 3784
+  tipo: diretta
+- id: GcUJvcqida8
+  titolo: Le Tue Dediche
+  data: '2021-07-29'
+  durata: 3874
+  tipo: diretta
+- id: D2J8BZDjuQY
+  titolo: Le Tue Dediche
+  data: '2021-07-28'
+  durata: 3811
+  tipo: diretta
+- id: 5Lz7ryVNBfc
+  titolo: Le Tue Dediche
+  data: '2021-07-27'
+  durata: 3910
+  tipo: diretta
+- id: xpefEPgCcoM
+  titolo: Le Tue Dediche
+  data: '2021-07-24'
+  durata: 3574
+  tipo: diretta
+- id: hFlQQVs7eu0
+  titolo: Le Tue Dediche
+  data: '2021-07-23'
+  durata: 3783
+  tipo: diretta
+- id: 4g_8W2z37Vo
+  titolo: Le Tue Dediche
+  data: '2021-07-22'
+  durata: 3547
+  tipo: diretta
+- id: a-3z4Mt2eSo
+  titolo: Le Tue Dediche
+  data: '2021-07-21'
+  durata: 3865
+  tipo: diretta
+- id: 47NA_gOnRIg
+  titolo: Le Tue Dediche
+  data: '2021-07-20'
+  durata: 3659
+  tipo: diretta
+- id: W4zi7m3NBS4
+  titolo: Le Tue Dediche
+  data: '2021-07-17'
+  durata: 3933
+  tipo: diretta
+- id: 940R3vzyY8E
+  titolo: Le Tue Dediche
+  data: '2021-07-16'
+  durata: 3638
+  tipo: diretta
+- id: FlCj8xoeOdk
+  titolo: Le Tue Dediche
+  data: '2021-07-15'
+  durata: 3855
+  tipo: diretta
+- id: HKHt2jdtOk4
+  titolo: Le Tue Dediche
+  data: '2021-07-14'
+  durata: 3751
+  tipo: diretta
+- id: 64lYjN1gUfE
+  titolo: Le Tue Dediche
+  data: '2021-07-13'
+  durata: 3711
+  tipo: diretta
+- id: HG0w9C0Fwd0
+  titolo: Le Tue Dediche
+  data: '2021-07-10'
+  durata: 3578
+  tipo: diretta
+- id: GAJEBl6FlLM
+  titolo: Le Tue Dediche
+  data: '2021-06-29'
+  durata: 3930
+  tipo: diretta
+- id: KBSyHiSfptk
+  titolo: Le Tue Dediche
+  data: '2021-06-27'
+  durata: 3825
+  tipo: diretta
+- id: HmTvURHgckE
+  titolo: il Salotto di Controtempo
+  data: '2021-06-18'
+  durata: 5527
+  tipo: diretta
+- id: -S-_FpojEZo
+  titolo: Politica - il salotto di controtempo
+  data: '2021-06-11'
+  durata: 5808
+  tipo: diretta
+- id: o13vDR43j5w
+  titolo: VIDEO PROMOZIONALE SdB.TV
+  data: '2021-05-25'
+  durata: 55
+  tipo: video
+- id: iGNfGVYAWT0
+  titolo: 'Ospite: Mauro De Stefano'
+  data: '2021-05-22'
+  durata: 4097
+  tipo: diretta
+- id: 9evSRrtp1wM
+  titolo: La Musica dei Miei Amici
+  data: '2021-05-15'
+  durata: 3825
+  tipo: diretta
+- id: bTqJ8IxHPsU
+  titolo: Premiazione Premio di Narrativa "Breve"
+  data: '2021-05-11'
+  durata: 3305
+  tipo: video
+- id: TtoCxbeBfpg
+  titolo: Promo Venerdì 14 Maggio de "La Musica dei Miei Amici
+  data: '2021-05-11'
+  durata: 30
+  tipo: video
+- id: nizUuWwRQMc
+  titolo: Processione Beata Vergine di Sommariva del Bosco
+  data: '2021-05-09'
+  durata: 5928
+  tipo: video
+- id: pO0OG0XZAgk
+  titolo: La Musica dei Miei Amici
+  data: '2021-05-01'
+  durata: 7326
+  tipo: diretta
+- id: QqWsOLw5Ohg
+  titolo: La Musica dei Miei Amici
+  data: '2021-04-24'
+  durata: 8166
+  tipo: diretta
+- id: Sj-qynSGhSQ
+  titolo: Sommariva si Vaccina
+  data: '2021-04-18'
+  durata: 1294
+  tipo: diretta
+- id: 2Z-B0NG1CHU
+  titolo: Presentazione del libro "Altalena" di Angela Volpe
+  data: '2021-03-28'
+  durata: 3260
+  tipo: diretta
+- id: qW0PY31Kx0M
+  titolo: Natale con AREA30
+  data: '2020-12-25'
+  durata: 6108
+  tipo: diretta
+- id: drEZ39cMCdU
+  titolo: Natale Con AREA30
+  data: '2020-12-22'
+  durata: 89
+  tipo: video
+- id: yLYt12Mreoo
+  titolo: I MIELI DEGLI ESPOSITORI
+  data: '2020-09-13'
+  durata: 4990
+  tipo: diretta
+- id: bR5CD4BhxGY
+  titolo: convegno
+  data: '2020-09-13'
+  durata: 10362
+  tipo: diretta
+- id: YoaTXAwzBY8
+  titolo: Premio di Narrativa Breve
+  data: '2020-09-03'
+  durata: 2560
+  tipo: diretta
+- id: YR8VNI3b9sw
+  titolo: La Musica dei Miei Amici
+  data: '2020-07-23'
+  durata: 7490
+  tipo: diretta
+- id: 6URCrwgDxxw
+  titolo: La Musica dei Miei Amici
+  data: '2020-07-16'
+  durata: 8206
+  tipo: diretta
+- id: N4qSnHC2IhQ
+  titolo: La Musica dei Miei Amici
+  data: '2020-07-02'
+  durata: 7464
+  tipo: diretta
+- id: P3J3YX46RY0
+  titolo: La Musica dei Miei Amici
+  data: '2020-06-25'
+  durata: 7576
+  tipo: diretta
+- id: 93p5vDf7otI
+  titolo: La Musica dei Miei Amici
+  data: '2020-06-18'
+  durata: 7506
+  tipo: diretta
+- id: fZqjwzax8dU
+  titolo: La Musica dei Miei Amici
+  data: '2020-06-11'
+  durata: 7412
+  tipo: diretta
+- id: c5AiDX3YLKY
+  titolo: La Musica dei Miei Amici
+  data: '2020-06-04'
+  durata: 7716
+  tipo: diretta
+- id: QsOpiqSE5gY
+  titolo: La Musica dei Miei Amici
+  data: '2020-05-28'
+  durata: 7574
+  tipo: diretta
+- id: 9qqY5YdAbEM
+  titolo: La Musica dei Miei Amici
+  data: '2020-05-22'
+  durata: 7114
+  tipo: diretta
+- id: RDp1OeRDTaE
+  titolo: La Musica dei Miei Amici
+  data: '2020-05-15'
+  durata: 6968
+  tipo: diretta
+- id: a375Pavz5V0
+  titolo: La Musica dei Miei Amici
+  data: '2020-05-08'
+  durata: 7140
+  tipo: diretta
+- id: 6hK4bYulS_g
+  titolo: I MIEI VINILI - LE VOSTRE RICHIESTE
+  data: '2020-05-03'
+  durata: 4787
+  tipo: diretta
+- id: eFd2sxtgX5M
+  titolo: I MIEI VINILI - TOZZI VS PAUSINI
+  data: '2020-05-02'
+  durata: 3929
+  tipo: diretta
+- id: 33nsa6fWr1c
+  titolo: I MIEI VINILI
+  data: '2020-04-30'
+  durata: 3723
+  tipo: diretta
+- id: -r2ziISCFT4
+  titolo: I MIEI VINILI - ITALIAN JUKEBOX
+  data: '2020-04-29'
+  durata: 4026
+  tipo: diretta
+- id: VGAJzBKFR_A
+  titolo: I MIEI VINILI
+  data: '2020-04-28'
+  durata: 3824
+  tipo: diretta
+- id: 7xbnomEe_RY
+  titolo: I MIEI VINILI
+  data: '2020-04-26'
+  durata: 3796
+  tipo: diretta
+- id: R54WDC8x58s
+  titolo: I MIEI VINILI
+  data: '2020-04-25'
+  durata: 3789
+  tipo: diretta
+- id: KtbQu1b1Dn8
+  titolo: I MIEI VINILI - ANNI 90
+  data: '2020-04-24'
+  durata: 3808
+  tipo: diretta
+- id: -9FczTT83yY
+  titolo: I MIEI VINILI
+  data: '2020-04-23'
+  durata: 3693
+  tipo: diretta
+- id: 3uCw1UpbYaI
+  titolo: I MIEI VINILI - COLONNE SONORE
+  data: '2020-04-22'
+  durata: 3577
+  tipo: diretta
+- id: rBmxHcYhkAo
+  titolo: I MIEI VINILI - ANNI 60
+  data: '2020-04-21'
+  durata: 3844
+  tipo: diretta
+- id: qGhqmJ2Eh8k
+  titolo: I MIEI VINILI
+  data: '2020-04-19'
+  durata: 3962
+  tipo: diretta
+- id: D0I3VGtD9u0
+  titolo: I MIEI VINILI
+  data: '2020-04-18'
+  durata: 3669
+  tipo: diretta
+- id: 5jUQLLVHcfI
+  titolo: I MIEI VINILI
+  data: '2020-04-17'
+  durata: 3796
+  tipo: diretta
+- id: KAgejlC6CeQ
+  titolo: I MIEI VINILI
+  data: '2020-04-16'
+  durata: 3086
+  tipo: diretta
+- id: 7uFeItR3y88
+  titolo: I MIEI VINILI
+  data: '2020-04-15'
+  durata: 2254
+  tipo: diretta
+- id: ao_LbSn6Si8
+  titolo: PROMO - I MIEI VINILI
+  data: '2020-04-14'
+  durata: 63
+  tipo: video

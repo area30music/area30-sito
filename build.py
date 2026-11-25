@@ -28,6 +28,7 @@ from urllib.parse import quote, urlencode
 from zoneinfo import ZoneInfo
 
 import yaml
+import live as live_mod
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from PIL import Image, ImageFilter, ImageOps, ImageDraw
 
@@ -574,6 +575,19 @@ def event_title(e) -> str:
     return short(e.titolo, 56) + " | AREA30"
 
 
+def md(testo) -> str:
+    """Testo del pannello in HTML sicuro: **grassetto** e a capo."""
+    from markupsafe import Markup, escape
+    s = str(escape(str(testo or "")))
+    s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
+    return Markup(s.replace("\n", "<br>"))
+
+
+def seo(T: dict, pagina: str, campo: str, predefinito: str) -> str:
+    v = str(((T.get(pagina) or {}).get(campo)) or "").strip()
+    return v or predefinito
+
+
 def minify_html(s: str) -> str:
     parts = re.split(r"(<(?:script|style|pre|textarea)[\s\S]*?</(?:script|style|pre|textarea)>)", s)
     for i in range(0, len(parts), 2):
@@ -593,10 +607,14 @@ def build():
     OUT.mkdir(parents=True)
 
     site = load_yaml(CONTENT / "sito.yml")
+    T = load_yaml(CONTENT / "testi.yml") if (CONTENT / "testi.yml").exists() else {}
     # Notifiche: attive solo con l'ID di OneSignal e sul sito definitivo (non nell'anteprima)
     onesignal_id = str(site.get("onesignal_app_id") or "").strip() if not NOINDEX else ""
     os_files = onesignal_locale() if onesignal_id else {}
     storico = carica_storico(onesignal_id) if onesignal_id else []
+    live = live_mod.dati_live()
+    print(f"  live: {len(live['youtube'])} video YouTube, {len(live['mixcloud'])} puntate Mixcloud, "
+          f"diretta YouTube {'IN CORSO' if live['stato'].get('live') else 'no'}")
     servizi = load_yaml(CONTENT / "servizi.yml").get("servizi", [])
     galleria = load_yaml(CONTENT / "galleria.yml").get("foto", []) or []
     stampa = load_yaml(CONTENT / "rassegna-stampa.yml").get("articoli", []) or []
@@ -654,9 +672,10 @@ def build():
 
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["html", "xml"]),
                       trim_blocks=True, lstrip_blocks=True)
+    env.filters["md"] = md
     env.globals.update(
         url=url, abs_url=abs_url, base_path=BASE_PATH, site=site, today=today, year=today.year, css=css, noindex=NOINDEX,
-        js_v=asset_version(ASSETS / "js" / "main.js"), ultima_notifica=(storico[0]["quando"] if storico else ""), os_page_js=os_files.get("OneSignalSDK.page.es6.js", ""), icon_v=asset_version(ASSETS / "icon-512.png"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
+        js_v=asset_version(ASSETS / "js" / "main.js"), T=T, live=live, giorno_num=live_mod.giorno_num, to_date=to_date, ultima_notifica=(storico[0]["quando"] if storico else ""), os_page_js=os_files.get("OneSignalSDK.page.es6.js", ""), icon_v=asset_version(ASSETS / "icon-512.png"), data_it=data_it, prossimi=prossimi, onesignal_id=onesignal_id,
         wa=lambda testo="": f"https://wa.me/{site['whatsapp']}" + (f"?text={quote(testo)}" if testo else ""),
     )
 
@@ -679,39 +698,39 @@ def build():
     # Home
     home_events = [event_schema(e, site) for e in prossimi]
     render("index.html", "/", "index.html",
-           title="AREA30 | Service audio e luci ed eventi live a Sommariva del Bosco",
-           description="AREA30: service audio e luci, concerti ed eventi live a Sommariva del Bosco, provincia di Cuneo. "
-                       "Studio di registrazione e sala prove tra Roero, Langhe e Piemonte. Scopri i prossimi eventi.",
+           title=seo(T, "home", "seo_titolo", "AREA30 | Service audio e luci ed eventi live a Sommariva del Bosco"),
+           description=seo(T, "home", "seo_descrizione", "AREA30: service audio e luci, concerti ed eventi live a Sommariva del Bosco, provincia di Cuneo. "
+                       "Studio di registrazione e sala prove tra Roero, Langhe e Piemonte. Scopri i prossimi eventi."),
            schema=page_schema(org, {"@type": "WebSite", "@id": abs_url("/#sito"), "url": abs_url("/"), "name": "AREA30",
                                     "inLanguage": "it-IT", "publisher": {"@id": abs_url("/#organizzazione")}}, *home_events),
            hero=hero, video=video, servizi=servizi, galleria=gal[:10], passati=passati[:12], stampa=stampa[:3],
            priority="1.0")
 
     render("servizi.html", "/i-nostri-servizi", "i-nostri-servizi.html",
-           title="Service audio luci, studio di registrazione e sala prove – AREA30",
-           description="Service audio e luci per concerti, feste e festival in provincia di Cuneo, Roero e Langhe. "
-                       "Studio di registrazione analogico e digitale e sala prove a Sommariva del Bosco (CN).",
+           title=seo(T, "servizi", "seo_titolo", "Service audio luci, studio di registrazione e sala prove – AREA30"),
+           description=seo(T, "servizi", "seo_descrizione", "Service audio e luci per concerti, feste e festival in provincia di Cuneo, Roero e Langhe. "
+                       "Studio di registrazione analogico e digitale e sala prove a Sommariva del Bosco (CN)."),
            schema=page_schema(org, breadcrumb(nav_home, ("I nostri servizi", "/i-nostri-servizi"))),
            servizi=servizi, og_image=imgs.og(servizi[0]["immagine"], "servizi", titolo="servizi"), priority="0.9")
 
     render("eventi-passati.html", "/eventi-passati", "eventi-passati.html",
-           title="Eventi passati e foto – Controtempo | AREA30 Sommariva del Bosco",
-           description="La storia di AREA30 in locandine e foto: le edizioni di Controtempo, concerti e spettacoli "
-                       "al Teatro Bongioanni e in piazza a Sommariva del Bosco (CN).",
+           title=seo(T, "eventi_passati", "seo_titolo", "Eventi passati e foto – Controtempo | AREA30 Sommariva del Bosco"),
+           description=seo(T, "eventi_passati", "seo_descrizione", "La storia di AREA30 in locandine e foto: le edizioni di Controtempo, concerti e spettacoli "
+                       "al Teatro Bongioanni e in piazza a Sommariva del Bosco (CN)."),
            schema=page_schema(org, breadcrumb(nav_home, ("Eventi passati", "/eventi-passati"))),
            passati=passati, galleria=gal, priority="0.8")
 
     render("parlano-di-noi.html", "/parlano-di-noi", "parlano-di-noi.html",
-           title="Parlano di noi – Rassegna stampa | AREA30 Sommariva del Bosco",
-           description="Articoli e notizie su AREA30 e sul festival Controtempo di Sommariva del Bosco: "
-                       "cosa scrivono i giornali del Roero e della provincia di Cuneo.",
+           title=seo(T, "parlano_di_noi", "seo_titolo", "Parlano di noi – Rassegna stampa | AREA30 Sommariva del Bosco"),
+           description=seo(T, "parlano_di_noi", "seo_descrizione", "Articoli e notizie su AREA30 e sul festival Controtempo di Sommariva del Bosco: "
+                       "cosa scrivono i giornali del Roero e della provincia di Cuneo."),
            schema=page_schema(org, breadcrumb(nav_home, ("Parlano di noi", "/parlano-di-noi"))),
            stampa=stampa, priority="0.6")
 
     render("contatti.html", "/contattaci", "contattaci.html",
-           title="Contatti – AREA30, Via Mario Groppo 4, Sommariva del Bosco (CN)",
-           description="Contatta AREA30 per service audio e luci, eventi, studio di registrazione e sala prove: "
-                       "telefono 0172 56 00 87, WhatsApp, email info@area30.it. Sommariva del Bosco (CN).",
+           title=seo(T, "contatti", "seo_titolo", "Contatti – AREA30, Via Mario Groppo 4, Sommariva del Bosco (CN)"),
+           description=seo(T, "contatti", "seo_descrizione", "Contatta AREA30 per service audio e luci, eventi, studio di registrazione e sala prove: "
+                       "telefono 0172 56 00 87, WhatsApp, email info@area30.it. Sommariva del Bosco (CN)."),
            schema=page_schema(org, breadcrumb(nav_home, ("Contatti", "/contattaci"))), priority="0.8")
 
     for e in eventi:
@@ -732,6 +751,15 @@ def build():
                storico=storico, generato=datetime.now(TZ).isoformat(), storico_json=json.dumps(storico, ensure_ascii=False).replace("</", "<\\/"),
                description="Attiva le notifiche di AREA30 per sapere subito quando annunciamo un nuovo concerto.",
                no_sitemap=True, noindex_page=True)
+
+    yt_cfg = live["cfg"].get("youtube") or {}
+    render("live.html", "/live", "live.html",
+           title=seo(T, "live", "seo_titolo", "AREA30 Live – dirette e puntate su YouTube e Mixcloud"),
+           description=seo(T, "live", "seo_descrizione", short(f"Le dirette di AREA30: {yt_cfg.get('programma', '')} ogni {yt_cfg.get('giorno', '')} su YouTube "
+                             f"e {(live['cfg'].get('mixcloud') or {}).get('programma', '')} su Mixcloud. Tutte le puntate da rivedere e riascoltare.")),
+           schema=page_schema(org, breadcrumb(nav_home, ("Live", "/live"))), priority="0.8")
+    (OUT / "live.json").write_text(json.dumps({"stato": live["stato"], "aggiornato": live["aggiornato"]},
+                                              ensure_ascii=False), encoding="utf-8")
 
     render("404.html", "/404", "404.html", title="Pagina non trovata | AREA30",
            description="La pagina che cerchi non esiste.", no_sitemap=True, noindex_page=True)

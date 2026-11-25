@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_macro.html" import icon, page_hero %}
 {% block content %}
-{{ page_hero("Contatti", "Per service audio e luci, eventi, studio di registrazione e sala prove: scrivici o chiamaci, ti rispondiamo volentieri.", "Parliamone") }}
+{{ page_hero(T.contatti.titolo, T.contatti.sottotitolo, T.contatti.sopratitolo) }}
 {% set a = site.indirizzo %}
 {% set maps_q = ('AREA30 ' ~ a.via ~ ' ' ~ a.cap ~ ' ' ~ a.citta)|urlencode %}
 <section class="section">
@@ -30,7 +30,7 @@
     </div>
   </div>
   <div class="wrap social-band reveal">
-    <h2 class="display">Seguici sui social</h2>
+    <h2 class="display">{{ T.contatti.social_titolo }}</h2>
     <div class="social social--big">
       {% for k, v in site.social.items() if v %}<a href="{{ v }}" target="_blank" rel="noopener" aria-label="AREA30 su {{ {'facebook':'Facebook','instagram':'Instagram','youtube':'YouTube','tiktok':'TikTok'}.get(k, k|capitalize) }}">{{ icon(k) }}<span>{{ {'facebook':'Facebook','instagram':'Instagram','youtube':'YouTube','tiktok':'TikTok'}.get(k, k|capitalize) }}</span></a>{% endfor %}
     </div>

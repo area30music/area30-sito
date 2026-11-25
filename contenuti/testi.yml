@@ -1,0 +1,98 @@
+# Testi del sito AREA30 (modificabili dal pannello → "Testi del sito").
+# Nei testi puoi scrivere in grassetto mettendo due asterischi: **Controtempo**
+# Se lasci vuoto un titolo o una descrizione per Google, il sito usa quelli preparati in automatico.
+
+home:
+  seo_titolo: ""
+  seo_descrizione: ""
+  apertura_servizi:
+    - Service audio e luci
+    - Eventi live
+    - Studio di registrazione
+    - Sala prove
+  apertura_luogo: Sommariva del Bosco · Roero · Piemonte
+  eventi:
+    sopratitolo: In calendario
+    titolo: I nostri prossimi eventi
+    vuoto: Nuovi eventi in arrivo. Seguici sui social per non perdere nessun annuncio!
+  intro:
+    sopratitolo: Benvenuti nel nostro mondo
+    titolo: Diamo luce e suono
+    titolo_oro: alle tue idee
+    testo_grande: "Dal piccolo club al festival in piazza: AREA30 porta sul palco impianti audio, luci, strutture ed effetti speciali, e segue l’evento in tutti i suoi dettagli."
+    testo: "A Sommariva del Bosco, nel cuore del Roero, abbiamo anche uno studio di registrazione e una sala prove. E ogni anno organizziamo **Controtempo**, la rassegna che porta grandi artisti al Teatro Bongioanni e in piazza."
+    link: Scopri tutti i nostri servizi
+    bollino_piccolo: Controtempo
+    bollino_grande: dal 2016
+  servizi:
+    sopratitolo: Cosa facciamo
+    titolo: I nostri servizi
+  galleria:
+    sopratitolo: Dal vivo
+    titolo: L’emozione del palco
+    aiuto: Tocca una foto per aprirla a tutto schermo.
+  passati:
+    sopratitolo: La nostra storia
+    titolo: Eventi passati
+  stampa:
+    sopratitolo: Rassegna stampa
+    titolo: Parlano di noi
+  live:
+    sopratitolo: In diretta e on demand
+    titolo: AREA30 Live
+  app:
+    sopratitolo: Web app
+    titolo: AREA30
+    titolo_oro: sempre con te
+    testo: "Installa l’app sul telefono, sul tablet o sul Mac: i prossimi concerti a portata di tocco, anche con poca connessione."
+    testo_notifiche: E attiva le notifiche per sapere subito quando annunciamo un nuovo evento.
+  contatto:
+    sopratitolo: Hai un evento in mente?
+    titolo: Parliamone
+    titolo_oro: insieme
+    testo: "Concerti, feste, festival, eventi aziendali, registrazioni: raccontaci la tua idea."
+
+servizi:
+  seo_titolo: ""
+  seo_descrizione: ""
+  sopratitolo: Cosa facciamo
+  titolo: I nostri servizi
+  sottotitolo: Service audio e luci, studio di registrazione e sala prove a Sommariva del Bosco, per eventi in tutto il Piemonte.
+  dove_titolo: Dove lavoriamo
+  dove_testo: "Siamo a Sommariva del Bosco e seguiamo eventi in tutta la provincia di Cuneo, nel Roero, nelle Langhe e in Piemonte: dal piccolo club o pub al festival musicale, fino alle grandi manifestazioni di piazza."
+
+eventi_passati:
+  seo_titolo: ""
+  seo_descrizione: ""
+  sopratitolo: La nostra storia
+  titolo: Eventi passati
+  sottotitolo: "Un po’ della nostra storia: le serate di Controtempo e gli spettacoli che abbiamo portato sul palco."
+  galleria_sopratitolo: Galleria
+  galleria_titolo: Foto dal vivo
+  galleria_aiuto: Tocca una foto per aprirla a tutto schermo e sfogliare.
+
+parlano_di_noi:
+  seo_titolo: ""
+  seo_descrizione: ""
+  sopratitolo: Rassegna stampa
+  titolo: Parlano di noi
+  sottotitolo: Scopri le novità e leggi le ultime notizie su AREA30 e sul festival Controtempo.
+
+contatti:
+  seo_titolo: ""
+  seo_descrizione: ""
+  sopratitolo: Parliamone
+  titolo: Contatti
+  sottotitolo: "Per service audio e luci, eventi, studio di registrazione e sala prove: scrivici o chiamaci, ti rispondiamo volentieri."
+  social_titolo: Seguici sui social
+
+live:
+  seo_titolo: ""
+  seo_descrizione: ""
+  sopratitolo: In diretta e on demand
+  archivio_titolo: Le puntate
+
+notifiche:
+  sopratitolo: Avvisi
+  titolo: Notifiche
+  sottotitolo: "Gli avvisi di AREA30: nuovi concerti, ultimi biglietti e novità."

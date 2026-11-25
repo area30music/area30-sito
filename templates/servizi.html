@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_macro.html" import picture, icon, page_hero %}
 {% block content %}
-{{ page_hero("I nostri servizi", "Service audio e luci, studio di registrazione e sala prove a Sommariva del Bosco, per eventi in tutto il Piemonte.", "Cosa facciamo") }}
+{{ page_hero(T.servizi.titolo, T.servizi.sottotitolo, T.servizi.sopratitolo) }}
 <div class="serv-index wrap reveal">
   {% for s in servizi %}<a href="#{{ s.id }}">{{ s.titolo }}</a>{% endfor %}
 </div>
@@ -27,8 +27,8 @@
 <section class="section cta">
   <div class="beams beams--soft" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="wrap cta-inner">
-    <h2 class="display reveal">Dove lavoriamo</h2>
-    <p class="lead reveal">Siamo a Sommariva del Bosco e seguiamo eventi in tutta la provincia di Cuneo, nel Roero, nelle Langhe e in Piemonte: dal piccolo club o pub al festival musicale, fino alle grandi manifestazioni di piazza.</p>
+    <h2 class="display reveal">{{ T.servizi.dove_titolo }}</h2>
+    <p class="lead reveal">{{ T.servizi.dove_testo|md }}</p>
     <div class="cta-actions reveal"><a class="btn btn-gold" href="{{ url('/contattaci') }}"><span>Contattaci</span>{{ icon("arrow") }}</a></div>
   </div>
 </section>

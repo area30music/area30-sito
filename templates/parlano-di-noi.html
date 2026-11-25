@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_macro.html" import picture, icon, page_hero %}
 {% block content %}
-{{ page_hero("Parlano di noi", "Scopri le novità e leggi le ultime notizie su AREA30 e sul festival Controtempo.", "Rassegna stampa") }}
+{{ page_hero(T.parlano_di_noi.titolo, T.parlano_di_noi.sottotitolo, T.parlano_di_noi.sopratitolo) }}
 <section class="section">
   <div class="wrap press-list">
     {% for a in stampa %}

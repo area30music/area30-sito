@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% from "_macro.html" import icon, page_hero %}
+{% block content %}
+{% set yt = live.cfg.youtube or {} %}
+{% set mc = live.cfg.mixcloud or {} %}
+{{ page_hero(live.cfg.titolo or "AREA30 Live", live.cfg.sottotitolo or "", T.live.sopratitolo) }}
+
+<section class="section live-top" style="padding-top:0">
+  <div class="wrap">
+    <div class="onair" id="onair"
+         data-yt-canale="{{ yt.canale_id }}" data-yt-live="{{ live.stato.id if live.stato.live else '' }}"
+         data-yt-giorno="{{ giorno_num(yt.giorno) }}" data-yt-ora="{{ yt.ora }}" data-yt-durata="{{ yt.durata_minuti or 120 }}"
+         data-mc-utente="{{ mc.utente }}" data-mc-giorno="{{ giorno_num(mc.giorno) }}" data-mc-ora="{{ mc.ora }}" data-mc-durata="{{ mc.durata_minuti or 120 }}">
+      <div class="onair-head">
+        <span class="onair-dot" aria-hidden="true"></span>
+        <h2 id="onair-titolo">{% if live.stato.live %}In diretta adesso su YouTube{% else %}AREA30 non è in diretta{% endif %}</h2>
+      </div>
+      <p class="onair-sub" id="onair-sub">{% if live.stato.live %}{{ live.stato.titolo }}{% else %}Torna qui all'orario della prossima diretta.{% endif %}</p>
+      <div class="onair-player" id="onair-player" hidden></div>
+      <div class="onair-actions" id="onair-actions"></div>
+      <div class="prossime" id="prossime">
+        {% if yt.attivo %}
+        <div class="prossima prossima--yt">
+          <span class="prossima-ico">{{ icon("youtube") }}</span>
+          <div>
+            <small>Ogni {{ yt.giorno }} alle {{ yt.ora|replace(":", ".") }} · YouTube</small>
+            <b>{{ yt.programma }}</b>
+            <span class="prossima-quando" data-quando="yt"></span>
+          </div>
+        </div>
+        {% endif %}
+        {% if mc.attivo %}
+        <div class="prossima prossima--mc">
+          <span class="prossima-ico prossima-ico--mc">{{ icon("mixcloud") }}</span>
+          <div>
+            <small>Ogni {{ mc.giorno }} alle {{ mc.ora|replace(":", ".") }} · Mixcloud</small>
+            <b>{{ mc.programma }}</b>
+            <span class="prossima-quando" data-quando="mc"></span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section live-archivio" aria-labelledby="arch-h" style="padding-top:0">
+  <div class="wrap">
+    <h2 class="display" id="arch-h">{{ T.live.archivio_titolo }}</h2>
+    <div class="tabs" role="tablist">
+      {% if yt.attivo %}<button type="button" role="tab" class="tab" aria-selected="true" data-tab="yt">{{ icon("youtube") }}<span>YouTube</span><em>{{ live.youtube|length }}</em></button>{% endif %}
+      {% if mc.attivo %}<button type="button" role="tab" class="tab" aria-selected="{{ 'false' if yt.attivo else 'true' }}" data-tab="mc">{{ icon("mixcloud") }}<span>Mixcloud</span><em id="mc-n">{{ live.mixcloud|length }}</em></button>{% endif %}
+    </div>
+
+    {% if yt.attivo %}
+    <div class="tabpanel" data-panel="yt">
+      <p class="hint">{{ yt.programma }}{% if yt.conduttore %} con {{ yt.conduttore }}{% endif %} — {{ yt.descrizione }}</p>
+      <input type="search" class="vsearch" id="yt-cerca" placeholder="Cerca una puntata o un ospite…" aria-label="Cerca tra le puntate YouTube">
+      <div class="vgrid" id="yt-grid">
+        {% for v in live.youtube %}
+        <button type="button" class="vcard{% if loop.index > 12 %} in-piu{% endif %}" data-yt="{{ v.id }}" data-titolo="{{ v.titolo }}"{% if loop.index > 12 %} hidden{% endif %}>
+          <span class="vthumb"><img {% if loop.index > 12 %}data-src{% else %}src{% endif %}="https://i.ytimg.com/vi/{{ v.id }}/mqdefault.jpg" alt="" loading="lazy" width="320" height="180"><span class="vplay">{{ icon("play") }}</span>{% if v.durata_txt %}<span class="vdur">{{ v.durata_txt }}</span>{% endif %}</span>
+          <span class="vtxt"><b>{{ v.titolo }}</b>{% if v.data %}<small>{{ data_it(to_date(v.data), giorno=false) }}</small>{% endif %}</span>
+        </button>
+        {% endfor %}
+      </div>
+      <p class="storico-vuoto" id="yt-nessuna" hidden>Nessuna puntata trovata.</p>
+      {% if live.youtube|length > 12 %}<div class="btn-row" style="justify-content:center"><button type="button" class="btn btn-ghost" id="yt-altre">Mostra altre puntate</button></div>{% endif %}
+      <div class="btn-row" style="justify-content:center"><a class="btn btn-ghost" href="{{ yt.canale }}" target="_blank" rel="noopener">{{ icon("youtube") }}<span>Iscriviti al canale YouTube</span></a></div>
+    </div>
+    {% endif %}
+
+    {% if mc.attivo %}
+    <div class="tabpanel" data-panel="mc"{% if yt.attivo %} hidden{% endif %}>
+      <p class="hint">{{ mc.programma }}{% if mc.conduttore %} con {{ mc.conduttore }}{% endif %} — {{ mc.descrizione }}</p>
+      <div class="mclist" id="mc-list">
+        {% for c in live.mixcloud %}
+        <div class="mcitem" data-key="{{ c.key }}">
+          <button type="button" class="mcrow" aria-expanded="false">
+            {% if c.immagine %}<img src="{{ c.immagine }}" alt="" loading="lazy" width="96" height="96">{% endif %}
+            <span class="vtxt"><b>{{ c.titolo }}</b><small>{{ data_it(to_date(c.data), giorno=false) if c.data else '' }}{% if c.durata %} · {{ c.durata // 60 }} min{% endif %}</small></span>
+            <span class="mcplay">{{ icon("play") }}</span>
+          </button>
+          <div class="mcplayer" hidden></div>
+        </div>
+        {% else %}
+        <p class="storico-vuoto">Le puntate compariranno qui dopo la prima pubblicazione su Mixcloud.</p>
+        {% endfor %}
+      </div>
+      <div class="btn-row" style="justify-content:center"><a class="btn btn-ghost" href="{{ mc.profilo }}" target="_blank" rel="noopener">{{ icon("mixcloud") }}<span>Segui su Mixcloud</span></a></div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<dialog class="vdialog" id="vdialog" aria-label="Video">
+  <form method="dialog"><button class="lb-btn vd-x" aria-label="Chiudi">{{ icon("close") }}</button></form>
+  <div class="vd-frame"></div>
+  <div class="vd-bar"><b class="vd-titolo"></b><a class="btn btn-ghost vd-yt" target="_blank" rel="noopener">{{ icon("youtube") }}<span>Apri su YouTube</span></a></div>
+</dialog>
+
+<script>
+(function () {
+  var box = document.getElementById("onair");
+  var BASE = document.documentElement.dataset.base || "";
+  var NOMI = ["lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato", "domenica"];
+  var MESI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+
+  // ora di Roma: giorno (0 = lunedì) e minuti dalla mezzanotte
+  function roma(d) {
+    var p = {};
+    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Rome", weekday: "short", hour: "2-digit", minute: "2-digit", day: "numeric", month: "numeric", hourCycle: "h23" })
+      .formatToParts(d || new Date()).forEach(function (x) { p[x.type] = x.value; });
+    var g = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].indexOf(p.weekday);
+    return { g: g, min: (+p.hour) * 60 + (+p.minute), giorno: +p.day, mese: +p.month - 1 };
+  }
+  function prog(k) {
+    var o = (box.dataset[k + "Ora"] || "").split(":");
+    return { g: +box.dataset[k + "Giorno"], inizio: (+o[0]) * 60 + (+o[1] || 0), durata: +box.dataset[k + "Durata"] || 120 };
+  }
+  function inOnda(k, r) {
+    var p = prog(k), d = (r.g - p.g + 7) % 7, m = d * 1440 + r.min - p.inizio;
+    return m >= -10 && m < p.durata;   // da 10 minuti prima fino alla fine prevista
+  }
+  function prossima(k) {
+    var p = prog(k), r = roma(), d = (p.g - r.g + 7) % 7;
+    if (d === 0 && r.min >= p.inizio + p.durata) d = 7;
+    var dt = new Date(Date.now() + d * 864e5), rr = roma(dt);
+    var mancano = d * 1440 + p.inizio - r.min;
+    var testo = (d === 0 ? "oggi" : d === 1 ? "domani" : NOMI[rr.g] + " " + rr.giorno + " " + MESI[rr.mese]) +
+      " alle " + Math.floor(p.inizio / 60) + "." + String(p.inizio % 60).padStart(2, "0");
+    if (mancano > 0 && mancano < 1440) testo += " · tra " + (mancano >= 60 ? Math.floor(mancano / 60) + " h " : "") + (mancano % 60) + " min";
+    return testo;
+  }
+
+  var ytLive = box.dataset.ytLive || "";
+  var mostrato = "";
+  function player(html, chiave) {
+    var pl = document.getElementById("onair-player");
+    if (mostrato === chiave) return;
+    mostrato = chiave;
+    pl.innerHTML = html || ""; pl.hidden = !html;
+  }
+  function aggiorna() {
+    var r = roma(), t = document.getElementById("onair-titolo"), s = document.getElementById("onair-sub"), a = document.getElementById("onair-actions");
+    var ytOra = box.dataset.ytGiorno !== "" && inOnda("yt", r), mcOra = box.dataset.mcUtente && inOnda("mc", r);
+    box.classList.remove("on");
+    if (ytLive || ytOra) {
+      box.classList.add("on");
+      t.textContent = ytLive ? "In diretta adesso su YouTube" : "È l'ora della diretta su YouTube";
+      s.textContent = ytLive ? "" : "Se la diretta non è ancora partita, il player può mostrare «video non disponibile»: ricarica la pagina tra qualche minuto.";
+      var src = ytLive ? "https://www.youtube-nocookie.com/embed/" + ytLive + "?autoplay=1&mute=1&playsinline=1"
+                       : "https://www.youtube-nocookie.com/embed/live_stream?channel=" + box.dataset.ytCanale + "&autoplay=1&mute=1&playsinline=1";
+      player('<iframe src="' + src + '" title="Diretta YouTube AREA30" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>', "yt" + ytLive);
+      a.innerHTML = '<a class="btn btn-gold" href="https://www.youtube.com/' + (ytLive ? "watch?v=" + ytLive : "channel/" + box.dataset.ytCanale + "/live") + '" target="_blank" rel="noopener">Apri la diretta su YouTube</a>';
+    } else if (mcOra) {
+      box.classList.add("on");
+      t.textContent = "È l'ora della diretta su Mixcloud";
+      s.textContent = "Il " + NOMI[prog("mc").g] + " siamo in onda con audio e video su Mixcloud: tocca il pulsante per entrare.";
+      player("", "");
+      a.innerHTML = '<a class="btn btn-gold btn-lg" href="https://www.mixcloud.com/live/' + box.dataset.mcUtente + '/" target="_blank" rel="noopener">Guarda la diretta su Mixcloud</a>';
+    } else {
+      t.textContent = "AREA30 non è in diretta";
+      s.textContent = "Ecco quando ci trovi in onda:";
+      player("", "");
+      a.innerHTML = "";
+    }
+    document.querySelectorAll("[data-quando]").forEach(function (el) { el.textContent = "Prossima diretta: " + prossima(el.dataset.quando); });
+  }
+  aggiorna();
+  setInterval(aggiorna, 30000);
+  // stato della diretta YouTube aggiornato dal sito ogni pochi minuti
+  setInterval(function () {
+    fetch(BASE + "/live.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); })
+      .then(function (j) { var n = j && j.stato && j.stato.live ? j.stato.id : ""; if (n !== ytLive) { ytLive = n; aggiorna(); } })
+      .catch(function () {});
+  }, 60000);
+
+  // schede YouTube / Mixcloud
+  document.querySelectorAll(".tab").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll(".tab").forEach(function (x) { x.setAttribute("aria-selected", x === b ? "true" : "false"); });
+      document.querySelectorAll(".tabpanel").forEach(function (p) { p.hidden = p.dataset.panel !== b.dataset.tab; });
+    });
+  });
+  // puntate YouTube: 12 alla volta + ricerca
+  var mostra = 12, cards = Array.prototype.slice.call(document.querySelectorAll(".vcard"));
+  var altre = document.getElementById("yt-altre"), cerca = document.getElementById("yt-cerca");
+  function filtra() {
+    var q = (cerca && cerca.value || "").trim().toLowerCase(), n = 0, tot = 0;
+    cards.forEach(function (c) {
+      var ok = !q || c.dataset.titolo.toLowerCase().indexOf(q) !== -1;
+      if (ok) tot++;
+      c.hidden = !ok || (!q && ++n > mostra);
+      var img = c.querySelector("img"); if (!c.hidden && img && img.dataset.src) { img.src = img.dataset.src; img.removeAttribute("data-src"); }
+    });
+    if (altre) altre.hidden = !!q || mostra >= cards.length;
+    var vuoto = document.getElementById("yt-nessuna"); if (vuoto) vuoto.hidden = tot > 0;
+  }
+  if (altre) altre.addEventListener("click", function () { mostra += 12; filtra(); });
+  if (cerca) cerca.addEventListener("input", filtra);
+  filtra();
+
+  // video YouTube dentro il sito
+  var dlg = document.getElementById("vdialog");
+  document.getElementById("yt-grid") && document.getElementById("yt-grid").addEventListener("click", function (e) {
+    var c = e.target.closest("[data-yt]"); if (!c) return;
+    dlg.querySelector(".vd-frame").innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + c.dataset.yt + '?autoplay=1&playsinline=1&rel=0" title="' + c.dataset.titolo.replace(/"/g, "&quot;") + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+    dlg.querySelector(".vd-titolo").textContent = c.dataset.titolo;
+    dlg.querySelector(".vd-yt").href = "https://www.youtube.com/watch?v=" + c.dataset.yt;
+    dlg.showModal(); document.documentElement.classList.add("dialog-aperto");
+  });
+  dlg.addEventListener("close", function () { dlg.querySelector(".vd-frame").innerHTML = ""; document.documentElement.classList.remove("dialog-aperto"); });
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+
+  // Mixcloud: player dentro la pagina + puntate aggiornate in tempo reale
+  function mcHtml(c) {
+    var d = c.created_time ? new Date(c.created_time) : null;
+    var img = c.pictures && (c.pictures.extra_large || c.pictures.large);
+    return '<button type="button" class="mcrow" aria-expanded="false">' + (img ? '<img src="' + img + '" alt="" loading="lazy" width="96" height="96">' : "") +
+      '<span class="vtxt"><b></b><small>' + (d ? d.getDate() + " " + MESI[d.getMonth()] + " " + d.getFullYear() : "") + (c.audio_length ? " · " + Math.round(c.audio_length / 60) + " min" : "") + '</small></span><span class="mcplay">▶</span></button><div class="mcplayer" hidden></div>';
+  }
+  var lista = document.getElementById("mc-list");
+  if (lista) {
+    lista.addEventListener("click", function (e) {
+      var row = e.target.closest(".mcrow"); if (!row) return;
+      var it = row.parentNode, pl = it.querySelector(".mcplayer"), aperto = row.getAttribute("aria-expanded") === "true";
+      lista.querySelectorAll(".mcitem").forEach(function (x) { x.querySelector(".mcrow").setAttribute("aria-expanded", "false"); var p = x.querySelector(".mcplayer"); p.hidden = true; p.innerHTML = ""; });
+      if (!aperto) {
+        row.setAttribute("aria-expanded", "true"); pl.hidden = false;
+        pl.innerHTML = '<iframe width="100%" height="120" src="https://player-widget.mixcloud.com/widget/iframe/?hide_cover=1&autoplay=1&feed=' + encodeURIComponent(it.dataset.key) + '" allow="autoplay" title="Player Mixcloud"></iframe>';
+      }
+    });
+    if (box.dataset.mcUtente) {
+      fetch("https://api.mixcloud.com/" + box.dataset.mcUtente + "/cloudcasts/?limit=100").then(function (r) { return r.json(); }).then(function (j) {
+        var noti = {}; lista.querySelectorAll(".mcitem").forEach(function (x) { noti[x.dataset.key] = 1; });
+        (j.data || []).slice().reverse().forEach(function (c) {
+          if (noti[c.key]) return;
+          var div = document.createElement("div"); div.className = "mcitem"; div.dataset.key = c.key; div.innerHTML = mcHtml(c);
+          div.querySelector("b").textContent = c.name; lista.insertBefore(div, lista.firstChild);
+          var v = lista.querySelector(".storico-vuoto"); if (v) v.remove();
+        });
+        var n = document.getElementById("mc-n"); if (n) n.textContent = lista.querySelectorAll(".mcitem").length;
+      }).catch(function () {});
+    }
+  }
+})();
+</script>
+{% endblock %}

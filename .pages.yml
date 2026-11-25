@@ -176,6 +176,186 @@ content:
         readonly: true
         hidden: true
 
+  - name: testi
+    label: Testi del sito
+    type: file
+    path: contenuti/testi.yml
+    format: yaml
+    fields:
+      - name: home
+        label: Home
+        type: object
+        fields:
+          - { name: seo_titolo, label: "Titolo per Google (vuoto = automatico)", type: string, options: { maxlength: 70 } }
+          - { name: seo_descrizione, label: "Descrizione per Google (vuoto = automatica)", type: text, options: { maxlength: 160 } }
+          - { name: apertura_servizi, label: Scritte sotto il logo in apertura, type: string, list: true }
+          - { name: apertura_luogo, label: Riga del luogo in apertura, type: string }
+          - name: eventi
+            label: Sezione prossimi eventi
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+              - { name: vuoto, label: Testo quando non ci sono eventi, type: text }
+          - name: intro
+            label: Sezione "Benvenuti"
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+              - { name: titolo_oro, label: Parte del titolo in oro corsivo, type: string }
+              - { name: testo_grande, label: Testo grande, type: text, description: "Per il grassetto scrivi **parola**" }
+              - { name: testo, label: Testo, type: text, description: "Per il grassetto scrivi **parola**" }
+              - { name: link, label: Scritta del link ai servizi, type: string }
+              - { name: bollino_piccolo, label: Bollino oro (riga piccola), type: string }
+              - { name: bollino_grande, label: "Bollino oro (riga grande, vuoto = niente bollino)", type: string }
+          - name: servizi
+            label: Sezione servizi
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+          - name: galleria
+            label: Sezione foto dal vivo
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+              - { name: aiuto, label: Frase di aiuto, type: string }
+          - name: passati
+            label: Sezione eventi passati
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+          - name: stampa
+            label: Sezione Parlano di noi
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+          - name: live
+            label: Sezione Live
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+          - name: app
+            label: Riquadro dell'app
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+              - { name: titolo_oro, label: Parte del titolo in oro corsivo, type: string }
+              - { name: testo, label: Testo, type: text }
+              - { name: testo_notifiche, label: Frase sulle notifiche, type: string }
+          - name: contatto
+            label: Sezione finale "Parliamone"
+            type: object
+            fields:
+              - { name: sopratitolo, label: Sopratitolo, type: string }
+              - { name: titolo, label: Titolo, type: string }
+              - { name: titolo_oro, label: Parte del titolo in oro corsivo, type: string }
+              - { name: testo, label: Testo, type: text }
+      - name: servizi
+        label: Pagina I nostri servizi
+        type: object
+        fields:
+          - { name: seo_titolo, label: "Titolo per Google (vuoto = automatico)", type: string, options: { maxlength: 70 } }
+          - { name: seo_descrizione, label: "Descrizione per Google (vuoto = automatica)", type: text, options: { maxlength: 160 } }
+          - { name: sopratitolo, label: Sopratitolo, type: string }
+          - { name: titolo, label: Titolo, type: string }
+          - { name: sottotitolo, label: Sottotitolo, type: text }
+          - { name: dove_titolo, label: Titolo "Dove lavoriamo", type: string }
+          - { name: dove_testo, label: Testo "Dove lavoriamo", type: text }
+      - name: eventi_passati
+        label: Pagina Eventi passati
+        type: object
+        fields:
+          - { name: seo_titolo, label: "Titolo per Google (vuoto = automatico)", type: string, options: { maxlength: 70 } }
+          - { name: seo_descrizione, label: "Descrizione per Google (vuoto = automatica)", type: text, options: { maxlength: 160 } }
+          - { name: sopratitolo, label: Sopratitolo, type: string }
+          - { name: titolo, label: Titolo, type: string }
+          - { name: sottotitolo, label: Sottotitolo, type: text }
+          - { name: galleria_sopratitolo, label: Sopratitolo galleria, type: string }
+          - { name: galleria_titolo, label: Titolo galleria, type: string }
+          - { name: galleria_aiuto, label: Frase di aiuto galleria, type: string }
+      - name: parlano_di_noi
+        label: Pagina Parlano di noi
+        type: object
+        fields:
+          - { name: seo_titolo, label: "Titolo per Google (vuoto = automatico)", type: string, options: { maxlength: 70 } }
+          - { name: seo_descrizione, label: "Descrizione per Google (vuoto = automatica)", type: text, options: { maxlength: 160 } }
+          - { name: sopratitolo, label: Sopratitolo, type: string }
+          - { name: titolo, label: Titolo, type: string }
+          - { name: sottotitolo, label: Sottotitolo, type: text }
+      - name: contatti
+        label: Pagina Contatti
+        type: object
+        fields:
+          - { name: seo_titolo, label: "Titolo per Google (vuoto = automatico)", type: string, options: { maxlength: 70 } }
+          - { name: seo_descrizione, label: "Descrizione per Google (vuoto = automatica)", type: text, options: { maxlength: 160 } }
+          - { name: sopratitolo, label: Sopratitolo, type: string }
+          - { name: titolo, label: Titolo, type: string }
+          - { name: sottotitolo, label: Sottotitolo, type: text }
+          - { name: social_titolo, label: Titolo sezione social, type: string }
+      - name: live
+        label: Pagina Live
+        type: object
+        fields:
+          - { name: seo_titolo, label: "Titolo per Google (vuoto = automatico)", type: string, options: { maxlength: 70 } }
+          - { name: seo_descrizione, label: "Descrizione per Google (vuoto = automatica)", type: text, options: { maxlength: 160 } }
+          - { name: sopratitolo, label: Sopratitolo, type: string }
+          - { name: archivio_titolo, label: Titolo dell'archivio puntate, type: string }
+      - name: notifiche
+        label: Pagina Notifiche
+        type: object
+        fields:
+          - { name: sopratitolo, label: Sopratitolo, type: string }
+          - { name: titolo, label: Titolo, type: string }
+          - { name: sottotitolo, label: Sottotitolo, type: text }
+
+  - name: live
+    label: Live (YouTube e Mixcloud)
+    type: file
+    path: contenuti/live.yml
+    format: yaml
+    fields:
+      - { name: titolo, label: Titolo della pagina Live, type: string }
+      - { name: sottotitolo, label: Sottotitolo, type: text }
+      - name: youtube
+        label: YouTube
+        type: object
+        fields:
+          - { name: attivo, label: Mostra YouTube, type: boolean }
+          - { name: canale, label: Link del canale, type: string }
+          - { name: canale_id, label: "Codice del canale (non cambiarlo)", type: string, readonly: true }
+          - { name: programma, label: Nome del programma, type: string }
+          - { name: conduttore, label: Conduttore, type: string }
+          - { name: descrizione, label: Descrizione, type: text }
+          - name: giorno
+            label: Giorno della diretta
+            type: select
+            options: { values: [lunedì, martedì, mercoledì, giovedì, venerdì, sabato, domenica] }
+          - { name: ora, label: "Ora di inizio (es. 20:30)", type: string, pattern: { regex: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message: "Scrivi l'ora così: 20:30" } }
+          - { name: durata_minuti, label: Durata della diretta (minuti), type: number }
+      - name: mixcloud
+        label: Mixcloud
+        type: object
+        fields:
+          - { name: attivo, label: Mostra Mixcloud, type: boolean }
+          - { name: profilo, label: Link del profilo, type: string }
+          - { name: utente, label: "Nome utente Mixcloud (es. antoniogastaldi69)", type: string }
+          - { name: programma, label: Nome del programma, type: string }
+          - { name: conduttore, label: Conduttore, type: string }
+          - { name: descrizione, label: Descrizione, type: text }
+          - name: giorno
+            label: Giorno della diretta
+            type: select
+            options: { values: [lunedì, martedì, mercoledì, giovedì, venerdì, sabato, domenica] }
+          - { name: ora, label: "Ora di inizio (es. 18:00)", type: string, pattern: { regex: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message: "Scrivi l'ora così: 18:00" } }
+          - { name: durata_minuti, label: Durata della diretta (minuti), type: number }
+
   - name: galleria
     label: Galleria foto "Dal vivo"
     type: file

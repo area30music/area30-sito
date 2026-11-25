@@ -359,4 +359,29 @@
     });
     if (dialog) dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
   }
+
+  /* Bollino LIVE nel menu: diretta YouTube rilevata dal sito, oppure orario delle dirette */
+  const navLive = $(".nav-live");
+  if (navLive) {
+    const romaOra = () => {
+      const p = {};
+      new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Rome", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+        .formatToParts(new Date()).forEach((x) => { p[x.type] = x.value; });
+      return { g: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(p.weekday), min: (+p.hour) * 60 + (+p.minute) };
+    };
+    const inOnda = (spec) => {
+      const [g, ora, dur] = (spec || "").split("|");
+      if (!ora) return false;
+      const [h, m] = ora.split(":");
+      const r = romaOra(), inizio = (+h) * 60 + (+m || 0);
+      const diff = ((r.g - +g + 7) % 7) * 1440 + r.min - inizio;
+      return diff >= -10 && diff < (+dur || 120);
+    };
+    const segna = () => {
+      const on = !!navLive.dataset.liveYt || inOnda(navLive.dataset.yt) || inOnda(navLive.dataset.mc);
+      $$(".nav-live").forEach((a) => { const p = $(".live-pill", a); if (p) p.hidden = !on; a.classList.toggle("is-live", on); });
+    };
+    segna();
+    setInterval(segna, 60000);
+  }
 })();

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_macro.html" import picture, icon, page_hero, poster_tile %}
 {% block content %}
-{{ page_hero("Eventi passati", "Un po’ della nostra storia: le serate di Controtempo e gli spettacoli che abbiamo portato sul palco.", "La nostra storia") }}
+{{ page_hero(T.eventi_passati.titolo, T.eventi_passati.sottotitolo, T.eventi_passati.sopratitolo) }}
 <section class="section" aria-label="Locandine degli eventi passati">
   <div class="wrap">
     {% set anni = passati|groupby("data.year")|reverse|list %}
@@ -19,9 +19,9 @@
 <section class="section live" aria-labelledby="gal-h">
   <div class="wrap">
     <div class="section-head">
-      <p class="eyebrow reveal">Galleria</p>
-      <h2 class="display reveal" id="gal-h">Foto dal vivo</h2>
-      <p class="hint reveal">Tocca una foto per aprirla a tutto schermo e sfogliare.</p>
+      <p class="eyebrow reveal">{{ T.eventi_passati.galleria_sopratitolo }}</p>
+      <h2 class="display reveal" id="gal-h">{{ T.eventi_passati.galleria_titolo }}</h2>
+      <p class="hint reveal">{{ T.eventi_passati.galleria_aiuto }}</p>
     </div>
     <div class="masonry" data-gallery="galleria">
       {% for g in galleria %}

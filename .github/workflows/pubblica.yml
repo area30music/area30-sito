@@ -8,6 +8,10 @@ on:
     - cron: "10 23 * * *"
     # ogni 15 minuti: aggiorna lo storico delle notifiche inviate dal sito di OneSignal
     - cron: "*/15 * * * *"
+    # durante le dirette controlla ogni 5 minuti se siamo in onda (orari in UTC: coprono ora solare e legale)
+    # YouTube: lunedì 20:30 · Mixcloud: giovedì 18:00
+    - cron: "*/5 17-22 * * 1"
+    - cron: "*/5 15-19 * * 4"
   workflow_dispatch:
 
 permissions:
@@ -168,3 +172,28 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: sleep 20 && gh workflow run pubblica.yml --ref main || true
+
+  archivio-live:
+    # aggiunge all'archivio della pagina Live i nuovi video YouTube (una volta al giorno basta)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Aggiorna archivio YouTube
+        run: |
+          python live.py aggiorna-archivio
+          if ! git diff --quiet -- contenuti/live-youtube.yml; then
+            git config user.name "AREA30 live"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add contenuti/live-youtube.yml
+            git commit -m "Archivio live: nuovi video YouTube"
+            git pull --rebase --autostash origin main && git push origin HEAD:main
+          fi
+
