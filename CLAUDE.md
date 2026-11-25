@@ -48,3 +48,7 @@ Dati per Google (Event), sitemap, llms.txt, calendario .ics e anteprime per What
 - Icone dell'app: `assets/icon-*.png` e `apple-touch-icon.png` con il logo AREA30 completo; `favicon.ico` resta il "30" (leggibile in piccolo).
 - Pagina /notifiche: storico (da API OneSignal nel build, cron ogni 15 min) + dettaglio (?n=&t=&m=&l=&i=). Pannello tecnico nascosto: aprire https://area30.it/notifiche?diagnosi per vedere stato SW, OneSignal e rete.
 - File OneSignal (sw e page SDK) sono scaricati nel build e serviti da /assets/onesignal/ per funzionare anche con VPN/blocchi.
+
+## Testi e Live
+- Tutti i testi delle pagine sono in `contenuti/testi.yml` (pannello "Testi del sito"); i template usano `T.<pagina>.<campo>`, filtro `|md` per **grassetto**; `seo_titolo`/`seo_descrizione` vuoti = valori automatici di build.py.
+- Pagina /live: `live.py` legge `contenuti/live.yml` (canali, giorni, orari), archivio `contenuti/live-youtube.yml` (152+ video, il job `archivio-live` aggiunge i nuovi dal feed RSS), Mixcloud via API pubblica (anche dal browser, CORS ok). Diretta YouTube rilevata dalla pagina pubblica /channel/ID/live (cron ogni 5 min lun/gio sera) → `/live.json`; Mixcloud live solo per orario (nessuna API pubblica).

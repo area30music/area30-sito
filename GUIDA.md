@@ -121,3 +121,18 @@ Dopo un paio di minuti, nel campo **Stato** leggi "Inviata il …" oppure "Progr
 - Più promemoria per lo stesso concerto (es. una settimana prima, il giorno prima, la mattina stessa): crea una notifica per ciascuno.
 
 In alternativa puoi usare direttamente il sito di OneSignal: **Messages → New Push**, con la possibilità di programmare l'invio e di duplicare un messaggio già inviato.
+
+---
+
+## 6. Testi del sito
+Pannello → **Testi del sito**: qui cambi tutti i testi delle pagine (Home, I nostri servizi, Eventi passati, Parlano di noi, Contatti, Live, Notifiche), compresi titolo e descrizione per Google di ogni pagina (se li lasci vuoti il sito usa quelli preparati in automatico).
+- **Parte del titolo in oro corsivo**: è la parte finale dei titoli scritta in oro (es. "alle tue idee").
+- **Grassetto**: scrivi la parola tra due asterischi, es. `**Controtempo**`.
+
+## 7. Pagina Live (YouTube e Mixcloud)
+Indirizzo: https://area30.it/live
+- **Diretta**: durante l'orario della diretta YouTube (lunedì 20:30) la pagina mostra il player della diretta; il sito controlla anche ogni 5 minuti se siete davvero in onda e accende il bollino rosso **LIVE** nel menu. Il giovedì alle 18 compare "È l'ora della diretta su Mixcloud" con il pulsante per guardarla su Mixcloud (Mixcloud non permette di inserire la diretta dentro altri siti).
+- Fuori orario: "AREA30 non è in diretta" con giorno e ora delle prossime dirette.
+- **Archivio**: tutte le puntate YouTube (con ricerca) e i podcast Mixcloud, che si aggiungono da soli.
+- **Cambiare giorno o ora**: Pannello → **Live (YouTube e Mixcloud)** → giorno, ora e durata.
+- **Nascondere un video** dall'archivio: chiedimelo, oppure nel file `contenuti/live-youtube.yml` aggiungi `nascosto: true` sotto quel video.
