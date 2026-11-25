@@ -1,27 +1,24 @@
-# Pagina "Live": dirette e archivio di YouTube e Mixcloud.
-# Modificabile dal pannello (Pages CMS → "Live").
-
 titolo: AREA30 Live
 sottotitolo: Le nostre trasmissioni in diretta e tutte le puntate da rivedere e riascoltare.
-
 youtube:
   attivo: true
   canale: https://www.youtube.com/@area30music
   canale_id: UCt2g4DXX3QN6l42PU4lfYuA
-  programma: La Musica dei Miei Amici
-  conduttore: Maraman
-  descrizione: Il talk musicale di AREA30 con ospiti, artisti e protagonisti dei nostri eventi.
+  programma: La Musica dei Miei Amici - Marana
+  conduttore: Antonio Gastaldi insieme a Gigi Vaira e Alessandra Forlani
+  descrizione: Il talk musicale di AREA30 con ospiti, artisti e protagonisti dei
+    nostri eventi.
   giorno: lunedì
-  ora: "20:30"
+  ora: 20:30
   durata_minuti: 150
-
 mixcloud:
   attivo: true
   profilo: https://www.mixcloud.com/antoniogastaldi69/
   utente: antoniogastaldi69
   programma: Compilation by Tony Dj
   conduttore: Tony DJ
-  descrizione: La compilation del giovedì in diretta video; dopo la puntata la trovi qui in versione podcast.
+  descrizione: La compilation del giovedì in diretta video; dopo la puntata la
+    trovi qui in versione podcast.
   giorno: giovedì
-  ora: "18:00"
+  ora: 18:00
   durata_minuti: 120
