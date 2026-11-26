@@ -26,6 +26,26 @@ CONTENT = ROOT / "contenuti"
 ARCHIVIO = CONTENT / "live-youtube.yml"
 TZ = ZoneInfo("Europe/Rome")
 UA = "Mozilla/5.0 (compatible; AREA30-sito/1.0; +https://area30.it)"
+# YAML: gli orari come 20:30 scritti senza virgolette (succede con il pannello) restano testo.
+# Lo YAML standard li leggerebbe come numeri "sessagesimali" (20:30 -> 1230).
+class _Loader(yaml.SafeLoader):
+    pass
+
+
+_Loader.yaml_implicit_resolvers = {
+    k: [r for r in v if r[0] != "tag:yaml.org,2002:int"] for k, v in yaml.SafeLoader.yaml_implicit_resolvers.items()
+}
+_Loader.add_implicit_resolver(
+    "tag:yaml.org,2002:int",
+    re.compile(r"^(?:[-+]?0b[0-1_]+|[-+]?0[0-7_]+|[-+]?(?:0|[1-9][0-9_]*)|[-+]?0x[0-9a-fA-F_]+)$"),
+    list("-+0123456789"),
+)
+
+
+def yaml_load(testo):
+    return yaml.load(testo, Loader=_Loader)
+
+
 GIORNI = ["lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato", "domenica"]
 
 
@@ -37,7 +57,7 @@ def _get(url: str, timeout: int = 25) -> bytes:
 
 def config() -> dict:
     p = CONTENT / "live.yml"
-    return yaml.safe_load(p.read_text(encoding="utf-8")) if p.exists() else {}
+    return (yaml_load(p.read_text(encoding="utf-8")) or {}) if p.exists() else {}
 
 
 def giorno_num(nome: str) -> int:
@@ -70,7 +90,7 @@ def youtube_feed(canale_id: str) -> list[dict]:
 def youtube_archivio() -> list[dict]:
     if not ARCHIVIO.exists():
         return []
-    return (yaml.safe_load(ARCHIVIO.read_text(encoding="utf-8")) or {}).get("video", []) or []
+    return (yaml_load(ARCHIVIO.read_text(encoding="utf-8")) or {}).get("video", []) or []
 
 
 def youtube_video(canale_id: str) -> list[dict]:

@@ -74,7 +74,7 @@ def abs_url(path: str = "/") -> str:
 
 def load_yaml(p: Path):
     with open(p, encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
+        return live_mod.yaml_load(f) or {}
 
 
 def read_front_matter(p: Path):
@@ -82,7 +82,7 @@ def read_front_matter(p: Path):
     m = re.match(r"^---\s*\n(.*?)\n---\s*\n?(.*)$", text, re.S)
     if not m:
         return {}, text
-    return yaml.safe_load(m.group(1)) or {}, m.group(2).strip()
+    return live_mod.yaml_load(m.group(1)) or {}, m.group(2).strip()
 
 
 def data_it(d: date, giorno=True, anno=True) -> str:

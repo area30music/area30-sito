@@ -71,7 +71,7 @@ def vecchio_contenuto(path: str) -> dict:
         return {}
     try:
         out = subprocess.run(["git", "show", f"{before}:{path}"], capture_output=True, text=True, check=True).stdout
-        return yaml.safe_load(out) or {}
+        return build.live_mod.yaml_load(out) or {}
     except subprocess.CalledProcessError:
         return {}
 
@@ -103,7 +103,7 @@ def main(argv: list[str]) -> int:
         p = build.ROOT / path
         if not p.exists():
             continue
-        d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        d = build.live_mod.yaml_load(p.read_text(encoding="utf-8")) or {}
         if not d.get("invia"):
             continue
         print(f"Notifica: {path}")
